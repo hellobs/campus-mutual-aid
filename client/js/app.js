@@ -280,6 +280,10 @@ const App = (() => {
   function scale() {
     const stage = document.getElementById("stage");
     if (!stage) return;
+    if (window.matchMedia("(max-width: 600px)").matches) {
+      stage.style.transform = "none";
+      return;
+    }
     const s = Math.min(1, (window.innerHeight - 70) / 880, (window.innerWidth - 40) / 420);
     stage.style.transform = "scale(" + Math.max(0.5, s) + ")";
   }
