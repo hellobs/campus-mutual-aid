@@ -526,13 +526,13 @@
           <div class="nav">
             <button class="back" onclick="back()">‹</button>
             <h1>代取任务</h1>
-            <span class="right">已接单</span>
+            <span class="right" id="task-nav-status">已接单</span>
           </div>
           <div class="body">
             <div class="steps">
-              <div class="step now">已接单</div>
-              <div class="step">取餐中</div>
-              <div class="step">已送达</div>
+              <div class="step now" id="tstep-0">已接单</div>
+              <div class="step" id="tstep-1">取餐中</div>
+              <div class="step" id="tstep-2">已送达</div>
             </div>
 
             <div class="card" style="display:flex;align-items:center;gap:11px;margin-top:16px">
@@ -622,13 +622,13 @@
           </div>
           <div class="body">
             <div class="steps">
-              <div class="step step-done">已发布</div>
-              <div class="step step-done">已接单</div>
-              <div class="step now">取餐中</div>
-              <div class="step">已送达</div>
+              <div class="step step-done" id="pstep-0">已发布</div>
+              <div class="step step-done" id="pstep-1">已接单</div>
+              <div class="step now" id="pstep-2">取餐中</div>
+              <div class="step" id="pstep-3">已送达</div>
             </div>
 
-            <div class="card" style="display:flex;align-items:center;gap:11px;margin-top:16px">
+            <div class="card" id="progress-helper-card" hidden style="display:flex;align-items:center;gap:11px;margin-top:16px">
               <div class="thumb" style="width:42px;height:42px;border-radius:50%">王</div>
               <div style="flex:1">
                 <b id="progress-helper" style="font-size:13px">王同学</b>
@@ -638,7 +638,7 @@
             </div>
 
             <div class="section"><h3>取餐凭证</h3></div>
-            <div style="height:120px;border-radius:12px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">接单者取餐后拍照上传</div>
+            <div id="progress-proof" style="height:120px;border-radius:12px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">接单者取餐后拍照上传</div>
 
             <div class="rows" style="margin-top:14px">
               <div class="r"><span>取餐点</span><b id="progress-pickup">东1门 外卖柜</b></div>
@@ -648,7 +648,7 @@
             </div>
           </div>
           <div class="foot">
-            <button class="btn" onclick="go('s-errand-proof')">查看凭证并确认</button>
+            <button class="btn" id="progress-confirm" disabled onclick="go('s-errand-proof')">查看凭证并确认</button>
           </div>
         </section>
 

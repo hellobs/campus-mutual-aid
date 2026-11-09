@@ -218,7 +218,9 @@ const App = (() => {
   }
 
   function finishErrand() {
+    clearErrandTimers();
     if (state.lastErrand) state.lastErrand.status = "已完成";
+    paintErrand();
     setText("mine-status", "已完成");
     const g = addCredit(3, "完成一次外卖代取");
     if (!g) return;
@@ -315,6 +317,7 @@ const App = (() => {
     if (pb) pb.disabled = false;
     if (done) done.disabled = true;
     closeSheet("sheet-accept");
+    paintTaskSteps(0);
     const place = route.includes(" 到 ") ? route.split(" 到 ").slice(1).join(" 到 ") : "";
     if (window.API) API.createOrder({ kind: "errand", pickup: route, place });
     go("s-errand-task");
@@ -327,11 +330,13 @@ const App = (() => {
     if (box) box.textContent = "已上传 · 取餐照片";
     if (pb) pb.disabled = true;
     if (done) done.disabled = false;
+    paintTaskSteps(1);
     toast("凭证已上传");
     Logger.click("proof:upload");
   }
 
   function finishHelp() {
+    paintTaskSteps(3);
     const g = addCredit(3, "完成一次代取接单");
     if (!g) return;
     setText("errand-gain-text", "交接凭证已留存，双方各得 " + g + " 分信用。");
@@ -378,6 +383,37 @@ const App = (() => {
     return el ? el.textContent.trim() : fallback;
   }
 
+  let errandTimers = [];
+
+  function clearErrandTimers() {
+    errandTimers.forEach(clearTimeout);
+    errandTimers = [];
+  }
+
+  function stepState(id, mode) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle("step-done", mode === "done");
+    el.classList.toggle("now", mode === "now");
+  }
+
+  const ERRAND_STAGES = ["等待接单", "已接单", "取餐中", "已送达", "已完成"];
+
+  function paintProgressSteps(status) {
+    const idx = Math.max(0, ERRAND_STAGES.indexOf(status));
+    stepState("pstep-0", idx === 0 ? "now" : idx >= 1 ? "done" : "");
+    stepState("pstep-1", idx === 1 ? "now" : idx >= 2 ? "done" : "");
+    stepState("pstep-2", idx === 2 ? "now" : idx >= 3 ? "done" : "");
+    stepState("pstep-3", idx === 3 ? "now" : idx >= 4 ? "done" : "");
+  }
+
+  function paintTaskSteps(phase) {
+    stepState("tstep-0", phase === 0 ? "now" : phase >= 1 ? "done" : "");
+    stepState("tstep-1", phase === 1 ? "now" : phase >= 2 ? "done" : "");
+    stepState("tstep-2", phase >= 3 ? "done" : phase === 2 ? "now" : "");
+    setText("task-nav-status", phase >= 2 ? "已送达" : phase === 1 ? "取餐中" : "已接单");
+  }
+
   function paintErrand() {
     const o = state.lastErrand;
     if (!o) return;
@@ -394,6 +430,14 @@ const App = (() => {
     setText("proof-photo", "取餐照片 · " + o.pickup + " · " + (o.pickupTime || "18:22"));
     setText("proof-pickup-time", o.pickupTime || "18:22");
     setText("proof-deliver-time", o.deliveredTime || "18:31");
+    const status = o.status || "等待接单";
+    const idx = Math.max(0, ERRAND_STAGES.indexOf(status));
+    paintProgressSteps(status);
+    const card = document.getElementById("progress-helper-card");
+    if (card) card.hidden = idx < 1;
+    setText("progress-proof", idx >= 2 ? "取餐照片已上传" : "接单者取餐后拍照上传");
+    const confirm = document.getElementById("progress-confirm");
+    if (confirm) confirm.disabled = idx < 3;
   }
 
   function publishErrand() {
@@ -413,8 +457,19 @@ const App = (() => {
       helper: { name: "王同学", credit: 90, eta: "18:30" },
       pickupTime: "18:22",
       deliveredTime: "18:31",
+      status: "等待接单",
     };
     state.lastErrand = order;
+    clearErrandTimers();
+    errandTimers.push(setTimeout(() => {
+      if (state.lastErrand) { state.lastErrand.status = "已接单"; paintErrand(); }
+    }, 1500));
+    errandTimers.push(setTimeout(() => {
+      if (state.lastErrand) { state.lastErrand.status = "取餐中"; paintErrand(); }
+    }, 3500));
+    errandTimers.push(setTimeout(() => {
+      if (state.lastErrand) { state.lastErrand.status = "已送达"; paintErrand(); toast("已送达，请确认"); }
+    }, 5500));
     setText("mine-route", cfg.route);
     setText("mine-meta", portions + " · " + spill + " · " + tipText);
     setText("mine-status", "进行中");
