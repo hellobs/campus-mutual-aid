@@ -417,10 +417,29 @@
           </div>
         </section>
 
-        <section class="page" id="s-help" data-name="互助 分支">
+        <section class="page" id="s-help" data-name="互助">
           <div class="nav">
             <button class="back" onclick="back()">‹</button>
             <h1>互助</h1>
+            <span class="right">同校范围</span>
+          </div>
+          <div class="body">
+            <button class="item" onclick="go('s-errand')" style="align-items:flex-start;padding:14px">
+              <div class="thumb" style="width:46px;height:46px">餐</div>
+              <div class="info">
+                <b>代取外卖</b>
+                <small>顺路把外卖从柜子带回宿舍楼</small>
+              </div>
+              <span style="color:var(--muted);font-size:18px">›</span>
+            </button>
+            <div class="empty">其他互助类型暂未开放</div>
+          </div>
+        </section>
+
+        <section class="page" id="s-errand" data-name="互助 代取">
+          <div class="nav">
+            <button class="back" onclick="back()">‹</button>
+            <h1>代取</h1>
             <span class="right">同校范围</span>
           </div>
           <div class="body">

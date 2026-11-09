@@ -181,7 +181,7 @@ const App = (() => {
       const mark = btn.querySelector("b");
       if (mark) mark.textContent = on ? "当前" : "";
     });
-    const cards = document.querySelectorAll("#s-help [data-campus]");
+    const cards = document.querySelectorAll("#s-errand [data-campus]");
     let visible = 0;
     cards.forEach((el) => {
       if (el.dataset.campus === name) visible += 1;
