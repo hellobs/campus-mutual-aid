@@ -449,9 +449,9 @@ textarea.input {
   flex: 1;
   text-align: center;
   font-size: 10px;
-  color: #A9A296;
+  color: var(--muted);
   position: relative;
-  padding-top: 20px;
+  padding-top: 22px;
 }
 
 .step::before {
@@ -463,7 +463,7 @@ textarea.input {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #DED9CF;
+  background: var(--line);
 }
 
 .step.done {
@@ -475,16 +475,16 @@ textarea.input {
 }
 
 .step.now {
-  color: var(--ink);
-  font-weight: 600;
+  color: var(--green);
+  font-weight: 500;
 }
 
 .step.now::before {
-  background: #fff;
-  border: 3px solid var(--green);
-  width: 11px;
-  height: 11px;
-  top: 5px;
+  background: var(--green);
+  width: 9px;
+  height: 9px;
+  top: 6px;
+  box-shadow: 0 0 0 3px var(--green-soft);
 }
 
 .bigcode {
