@@ -825,3 +825,56 @@ textarea.input {
   font-weight: 500;
   border: 1px solid var(--line);
 }
+
+.spark {
+  width: 100%;
+  height: 44px;
+  display: block;
+  margin-top: 12px;
+}
+
+.spark-lg {
+  height: 92px;
+}
+
+.spark .area {
+  fill: var(--green-soft);
+  opacity: 0.65;
+}
+
+.spark .line {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.spark .guide {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.trend {
+  margin-top: 4px;
+}
+
+.trend-x,
+.trend-note {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.trend-x {
+  margin-top: 2px;
+}
+
+.trend-note {
+  margin-top: 6px;
+}

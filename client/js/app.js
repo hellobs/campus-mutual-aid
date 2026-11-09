@@ -6,6 +6,7 @@ const App = (() => {
     completed: 0,
     lastGain: null,
     lastErrand: null,
+    trend: [62, 66, 65, 72, 75, 79, 82],
     records: [
       { t: "昨天 18:20", text: "按时归还四六级耳机", delta: 4 },
       { t: "11 月 3 日", text: "完成一次教材转手", delta: 5 },
@@ -22,6 +23,26 @@ const App = (() => {
     if (el) el.textContent = text;
   }
 
+  function paintTrend() {
+    const vals = (state.trend || []).slice(-7);
+    if (vals.length < 2) return;
+    vals[vals.length - 1] = Math.max(50, Math.min(100, state.credit));
+    const pts = vals.map((v, i) => [i * (300 / (vals.length - 1)), 72 - (v - 50) * 1.28]);
+    let d = "M" + pts[0][0] + "," + pts[0][1];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += " C" + c1x.toFixed(1) + "," + c1y.toFixed(1) + " " + c2x.toFixed(1) + "," + c2y.toFixed(1) + " " + p2[0].toFixed(1) + "," + p2[1].toFixed(1);
+    }
+    document.querySelectorAll("svg[data-trend]").forEach((svg) => {
+      const line = svg.querySelector(".line");
+      const area = svg.querySelector(".area");
+      if (line) line.setAttribute("d", d);
+      if (area) area.setAttribute("d", d + " L300,80 L0,80 Z");
+    });
+  }
+
   function paintCredit() {
     document.querySelectorAll(".js-credit").forEach((el) => {
       el.textContent = fmt(state.credit);
@@ -29,6 +50,7 @@ const App = (() => {
     document.querySelectorAll(".js-month").forEach((el) => {
       el.textContent = "+" + state.monthGain;
     });
+    paintTrend();
     const log = document.getElementById("credit-log");
     if (log) {
       log.innerHTML = state.records
