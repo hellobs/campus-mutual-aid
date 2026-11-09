@@ -57,6 +57,13 @@ const App = (() => {
     document.querySelectorAll(".js-gain-short").forEach((el) => {
       el.textContent = g ? "+" + g : "0";
     });
+    const g5 = state.credit >= 100 ? 0 : Math.max(1, Math.round(5 * gainFactor(state.credit)));
+    document.querySelectorAll(".js-gain-review").forEach((el) => {
+      el.textContent = g5 ? "双方各 +" + g5 : "双方已满";
+    });
+    document.querySelectorAll(".js-gain-review3").forEach((el) => {
+      el.textContent = g ? "双方各 +" + g : "双方已满";
+    });
   }
 
   function paintCredit() {
