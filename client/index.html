@@ -29,47 +29,47 @@
             <div class="hero">
               <div class="hi">华南理工大学 · <button class="campus" id="campus-chip" onclick="App.openSheet('sheet-campus')">大学城校区</button></div>
               <h2>校内闲置与互助</h2>
-              <p>同校互助，做完一件记一次信用</p>
+              
             </div>
 
             <div class="credit">
               <div class="label">我的信用分</div>
-              <button class="why" onclick="App.openSheet('sheet-credit')">信用怎么用</button>
+              <button class="why" onclick="App.openSheet('sheet-credit')" aria-label="信用说明">?</button>
               <div class="row">
                 <div class="num js-credit">82</div>
                 <div class="unit">分</div>
               </div>
               <div class="meta">
                 <span>本月 <b class="js-month">+12</b></span>
-                <span>已完成 6 次互助</span>
+                
               </div>
               <div class="track"><i style="width:82%"></i></div>
-              <div class="meta"><span>82 / 100 · 距离评审员还差 3 次</span></div>
+              
             </div>
 
             <div class="entries">
               <button class="entry" onclick="go('s-post')">
                 <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5 12 4l8 4.5v9L12 22l-8-4.5z"/><path d="M4 8.5 12 13l8-4.5M12 13v9"/></svg></span>
                 <b>出闲置</b>
-                <span>把不用的东西交给同校的人</span>
+                
               </button>
               <button class="entry" onclick="go('s-borrow')">
                 <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.2h-4.2"/></svg></span>
                 <b>借物品</b>
-                <span>借一件只用一两次的东西</span>
+                
               </button>
               <button class="entry wide" onclick="go('s-help')">
                 <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.2-7-9a4 4 0 0 1 7-2.7A4 4 0 0 1 19 11c0 4.8-7 9-7 9z"/></svg></span>
                 <div>
                   <b>互助</b>
-                  <span>顺路帮别人一个忙</span>
+                  
                 </div>
               </button>
             </div>
 
-            <div class="hint" id="campus-note" style="margin-top:10px">仅显示大学城校区的内容</div>
+            
 
-            <div class="section"><h3>进行中</h3><a>全部</a></div>
+            <div class="section"><h3>进行中</h3></div>
             <button class="item" data-campus="大学城校区" onclick="go('s-locker')">
               <div class="thumb">书</div>
               <div class="info">
@@ -79,15 +79,6 @@
               <span class="tag">待取件</span>
             </button>
 
-            <div class="section"><h3>最近完成</h3></div>
-            <div class="item" data-campus="大学城校区">
-              <div class="thumb">耳</div>
-              <div class="info">
-                <b>四六级耳机</b>
-                <small>昨天归还，信用 +4</small>
-              </div>
-              <span class="tag amber">+4</span>
-            </div>
           </div>
 
           <nav class="tabbar">
@@ -148,7 +139,7 @@
                 <span class="tag">可扫码</span>
               </div>
             </div>
-            <div class="notice">平台不参与闲置定价与收款。对方从柜中取走并确认后，你和对方各得 5 分信用。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" id="post-submit" onclick="App.publishItem()">发布</button>
@@ -166,8 +157,9 @@
             <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
               <b style="font-size:17px">高数上册与手写笔记</b>
               <span class="tag">九成新</span>
+              <span class="tag">无偿</span>
             </div>
-            <div class="hint">书内有少量笔记，手写笔记一起给。无偿转让，平台不参与定价与收款。</div>
+            <div class="hint">书内有少量笔记，附手写笔记。</div>
 
             <div class="card" style="display:flex;align-items:center;gap:11px">
               <div class="thumb" style="width:42px;height:42px;border-radius:50%">李</div>
@@ -215,7 +207,7 @@
                 <div class="r"><span>地点</span><b>C11 楼下 丰巢柜</b></div>
                 <div class="r"><span>时限</span><b>今天 22:00 前</b></div>
               </div>
-              <div class="notice" style="margin-top:10px">确认后生成交付码，双方各留一条记录。</div>
+              
             </div>
           </div>
           <div class="foot">
@@ -242,7 +234,7 @@
               <div class="step">对方取走</div>
               <div class="step">确认完成</div>
             </div>
-            <div class="notice" style="margin-top:12px">把物品放进柜子后，对方凭码开柜。柜机屏幕在强光下会反光，建议在柜前直接出示此码。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="go('s-review')">我已放入柜中</button>
@@ -255,7 +247,7 @@
             <h1>确认完成</h1>
           </div>
           <div class="body">
-            <p class="hint" style="margin-top:0">对方已从柜中取走。确认后本次互助记入双方信用。</p>
+            
             <div class="section"><h3>给对方评价</h3></div>
             <div class="stars" id="stars">
               <i class="on" onclick="App.pickStar(1)">★</i>
@@ -264,6 +256,7 @@
               <i class="on" onclick="App.pickStar(4)">★</i>
               <i class="on" onclick="App.pickStar(5)">★</i>
             </div>
+            <div style="text-align:center;margin-top:6px"><span class="tag">双方各 +5</span></div>
             <div class="field">
               <label>印象标签</label>
               <div class="chips">
@@ -272,7 +265,7 @@
                 <button class="chip" onclick="App.choose(this,'标签')">好沟通</button>
               </div>
             </div>
-            <div class="notice" style="margin-top:16px">完成后双方各得 5 分信用。若物品与描述不符，可在 2 小时内撤回评价并申请复核。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="App.finishReview()">确认完成</button>
@@ -321,7 +314,7 @@
               </div>
               <span class="tag amber">可借</span>
             </div>
-            <div class="hint">信用 80 分以上免押金。分数不够时，可用押金代替。</div>
+            
           </div>
         </section>
 
@@ -336,7 +329,7 @@
               <b style="font-size:17px">四六级耳机</b>
               <span class="tag">信用免押</span>
             </div>
-            <div class="hint">考试用，功能正常，耳罩干净。出借人希望考完当天归还。</div>
+            <div class="hint">考试用，功能正常，耳罩干净。</div>
 
             <div class="card" style="display:flex;align-items:center;gap:11px">
               <div class="thumb" style="width:42px;height:42px;border-radius:50%">周</div>
@@ -350,10 +343,10 @@
             <div class="section"><h3>借用条件</h3></div>
             <div class="rows">
               <div class="r"><span>可借时长</span><b>3 天</b></div>
-              <div class="r"><span>押金</span><b class="amber-t">0 元，信用免押</b></div>
+              <div class="r"><span>押金</span><b class="amber-t">0 元，信用免押 <span class="tag">代管</span></b></div>
               <div class="r"><span>取还地点</span><b>C9 楼下 丰巢柜</b></div>
             </div>
-            <div class="notice" style="margin-top:12px">信用分 80 以上免押金。押金由平台代管，归还确认后原路退回。逾期未还，每天扣 2 分信用。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="go('s-borrow-apply')">申请借用</button>
@@ -372,7 +365,7 @@
                 <button class="chip on" onclick="App.choose(this,'归还')">考完当天 11 月 12 日</button>
                 <button class="chip" onclick="App.choose(this,'归还')">11 月 13 日</button>
               </div>
-              <div class="hint">建议选考试当天，系统会在到期前 4 小时提醒双方。</div>
+              
             </div>
             <div class="field">
               <label>取还方式</label>
@@ -382,15 +375,15 @@
               </div>
             </div>
             <div class="rows" style="margin-top:16px">
-              <div class="r"><span>押金</span><b class="amber-t">0 元</b></div>
+              <div class="r"><span>押金</span><b class="amber-t">0 元 <span class="tag">代管</span></b></div>
               <div class="r"><span>信用要求</span><b>80 分以上</b></div>
               <div class="r"><span>我的信用</span><b class="js-credit">82</b></div>
             </div>
-            <div class="notice" style="margin-top:12px">你的信用分为 82，已达到免押线。若信用不足，押金 30 元由平台代管，归还后退回。按时归还后信用再加 4 分。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="App.applyBorrow()">确认申请，信用免押</button>
-            <button class="btn ghost" style="margin-top:8px" onclick="App.toast('押金 30 元由平台代管，归还后退回')">改用押金</button>
+            <button class="btn ghost" style="margin-top:8px" onclick="App.toast('押金 30 元由平台代管，归还后退回')">付押金 30</button>
           </div>
         </section>
 
@@ -417,7 +410,7 @@
               <div class="tl"><div class="d gray"></div><div class="c"><b>对方确认，信用加分</b><small>按时归还加 4 分</small></div></div>
             </div>
 
-            <div class="notice" style="margin-top:14px">到期前 4 小时会提醒双方。逾期每天扣 2 分，并影响后续免押资格。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="App.finishBorrow()">我已归还</button>
@@ -431,19 +424,13 @@
             <span class="right">同校范围</span>
           </div>
           <div class="body">
-            <div class="hero" style="padding-top:0">
-              <div class="hi">顺路帮一个忙</div>
-              <h2>互助</h2>
-              <p>接一单顺路的，或者发布自己的需求</p>
-            </div>
-
             <div class="section" style="margin-top:0"><h3>可接的单</h3><a id="errand-count">3 单</a></div>
 
             <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东门 外卖柜 A12 到 C12 楼下" data-meta="1 份 · 有汤 · 发布者信用 82">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>东门 外卖柜 A12 到 C12 楼下</b>
-                <small>1 份 · 有汤 · 12 分钟前</small>
+                <small>1 份 · 有汤 · 打赏 3 元 · 12 分钟前</small>
                 <span class="tag" style="margin-top:2px">发布者信用 82</span>
               </div>
               <span class="tag amber">+3</span>
@@ -453,7 +440,7 @@
               <div class="thumb">餐</div>
               <div class="info">
                 <b>西门 外卖柜 B03 到 C9 楼下</b>
-                <small>2 份 · 不易洒 · 25 分钟前</small>
+                <small>2 份 · 不易洒 · 打赏 3 元 · 25 分钟前</small>
                 <span class="tag" style="margin-top:2px">发布者信用 90</span>
               </div>
               <span class="tag amber">+3</span>
@@ -463,7 +450,7 @@
               <div class="thumb">餐</div>
               <div class="info">
                 <b>东门 外卖柜 A08 到 C11 楼下</b>
-                <small>1 份 · 不易洒 · 40 分钟前</small>
+                <small>1 份 · 不易洒 · 打赏 3 元 · 40 分钟前</small>
                 <span class="tag" style="margin-top:2px">发布者信用 85</span>
               </div>
               <span class="tag amber">+3</span>
@@ -473,14 +460,14 @@
               <div class="thumb">餐</div>
               <div class="info">
                 <b>国际校区 外卖柜 D01 到 C2 楼下</b>
-                <small>1 份 · 不易洒 · 30 分钟前</small>
+                <small>1 份 · 不易洒 · 打赏 3 元 · 30 分钟前</small>
                 <span class="tag" style="margin-top:2px">发布者信用 88</span>
               </div>
               <span class="tag amber">+3</span>
             </button>
 
             <button class="btn" style="margin-top:16px" onclick="go('s-errand-post')">发布我的代取需求</button>
-            <div class="hint">接单后取餐拍照，送到宿舍楼下。双方确认后各得 3 分信用。需求方可自愿加打赏，由平台代收，完成后转给接单者。</div>
+            
           </div>
         </section>
 
@@ -517,7 +504,7 @@
             <div id="proof-box" style="height:120px;border-radius:12px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">取餐后拍照上传</div>
             <button class="btn ghost" id="proof-btn" style="margin-top:10px" onclick="App.uploadProof()">拍照上传</button>
 
-            <div class="notice" style="margin-top:12px">送达后由发布者确认。确认前不要点已送达，否则会进入复核。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" id="task-done" disabled onclick="App.finishHelp()">我已送达</button>
@@ -558,7 +545,7 @@
               <div class="input">C12 楼下，18:40 前</div>
             </div>
             <div class="field">
-              <label>打赏（可选，平台代收）</label>
+              <label>打赏</label>
               <div class="chips">
                 <button class="chip" onclick="App.choose(this,'打赏')">不加</button>
                 <button class="chip on" onclick="App.choose(this,'打赏')">3 元</button>
@@ -570,7 +557,7 @@
               <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
               <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
             </div>
-            <div class="notice" style="margin-top:12px">打赏由平台代收，确认送达后转给接单者。取餐后需拍照上传，作为交接凭证。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="App.publishErrand()">发布</button>
@@ -622,6 +609,7 @@
           </div>
           <div class="body">
             <div style="height:170px;border-radius:14px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">取餐照片 · 外卖柜 A12 · 18:22</div>
+            <div style="text-align:center;margin:8px 0"><span class="tag">双方各 +3</span></div>
             <div class="section"><h3>交接信息</h3></div>
             <div class="rows">
               <div class="r"><span>接单者</span><b>王同学 · 信用 90</b></div>
@@ -629,7 +617,7 @@
               <div class="r"><span>取餐时间</span><b>18:22</b></div>
               <div class="r"><span>送达时间</span><b>18:31</b></div>
             </div>
-            <div class="notice" style="margin-top:12px">确认后本次互助完成，双方各得 3 分信用，打赏转给接单者。若餐品有问题，可在 2 小时内提交复核。</div>
+            
           </div>
           <div class="foot">
             <button class="btn" onclick="App.finishErrand()">确认收到</button>
@@ -652,17 +640,17 @@
 
             <div class="credit">
               <div class="label">我的信用分</div>
-              <button class="why" onclick="App.openSheet('sheet-credit')">信用怎么用</button>
+              <button class="why" onclick="App.openSheet('sheet-credit')" aria-label="信用说明">?</button>
               <div class="row">
                 <div class="num js-credit">82</div>
                 <div class="unit">分</div>
               </div>
               <div class="meta">
                 <span>本月 <b class="js-month">+12</b></span>
-                <span>信誉良好</span>
+                
               </div>
               <div class="track"><i style="width:82%"></i></div>
-              <div class="meta"><span>距离评审员资格还差 3 次互助</span></div>
+              
             </div>
 
             <div class="section"><h3>信用权益</h3></div>
@@ -692,7 +680,7 @@
       <div class="sheet" id="sheet-campus">
         <div class="panel">
           <h3>切换校区</h3>
-          <p>闲置、借用和代取按校区隔离。柜机地点和可接的单只显示当前校区。</p>
+          
           <div class="rows">
             <button class="r on" data-campus-opt="大学城校区" onclick="App.setCampus('大学城校区')"><span>大学城校区</span><b>当前</b></button>
             <button class="r" data-campus-opt="广州国际校区" onclick="App.setCampus('广州国际校区')"><span>广州国际校区</span><b></b></button>
@@ -718,11 +706,11 @@
       <div class="sheet" id="sheet-credit">
         <div class="panel">
           <h3>信用分怎么用</h3>
-          <p>完成一次互助、按时归还、双方互评，都会加分。分数 80 以上免押金借用，分数更高可优先展示，并取得评审员资格。借物押金和代取打赏由平台代管代收，闲置转让不涉及付款。</p>
+          
           <div class="rows">
-            <div class="r"><span>现在</span><b>82 分</b></div>
-            <div class="r"><span>本月获得</span><b class="amber-t">+12</b></div>
-            <div class="r"><span>评审员资格</span><b>还差 3 次互助</b></div>
+            <div class="r"><span>完成互助</span><b>+3 至 +5</b></div>
+            <div class="r"><span>80 分</span><b>免押借用</b></div>
+            <div class="r"><span>评审员</span><b>还差 3 次</b></div>
           </div>
           <button class="btn" style="margin-top:14px" onclick="App.closeSheet('sheet-credit')">知道了</button>
         </div>
