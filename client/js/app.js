@@ -263,13 +263,22 @@ const App = (() => {
       const mark = btn.querySelector("b");
       if (mark) mark.textContent = on ? "当前" : "";
     });
-    const cards = document.querySelectorAll("#s-errand [data-campus]");
+    const cards = document.querySelectorAll("#help-pool > [data-campus]");
     let visible = 0;
     cards.forEach((el) => {
       if (el.dataset.campus === name) visible += 1;
     });
     const cnt = document.getElementById("errand-count");
     if (cnt) cnt.textContent = visible + " 单";
+    const acc = document.querySelectorAll("#accepted-list .item");
+    let accVisible = 0;
+    acc.forEach((el) => {
+      if (el.dataset.campus === name) accVisible += 1;
+    });
+    const accSec = document.getElementById("accepted-section");
+    if (accSec) accSec.hidden = accVisible === 0;
+    const accCnt = document.getElementById("accepted-count");
+    if (accCnt) accCnt.textContent = accVisible + " 单";
     if (!silent) {
       closeSheet("sheet-campus");
       toast("已切换到" + name);
@@ -298,6 +307,40 @@ const App = (() => {
     Logger.click("accept:" + route);
   }
 
+  function resetOrderCard(card) {
+    card.classList.remove("accepted", "finished");
+    card.onclick = function () { App.acceptOrder(this); };
+    const tag = card.querySelector(".tag.amber");
+    if (tag) {
+      tag.classList.add("js-gain-short");
+      const g = state.credit >= 100 ? 0 : Math.max(1, Math.round(3 * gainFactor(state.credit)));
+      tag.textContent = g ? "+" + g : "0";
+    }
+  }
+
+  function markAccepted(route) {
+    const pool = document.getElementById("help-pool");
+    const list = document.getElementById("accepted-list");
+    if (!pool || !list) return;
+    const card = [...pool.querySelectorAll(":scope > .item")].find((c) => c.dataset.route === route);
+    if (!card) return;
+    list.querySelectorAll(".item").forEach((c) => {
+      resetOrderCard(c);
+      pool.appendChild(c);
+    });
+    card.classList.add("accepted");
+    card.onclick = function () { go("s-errand-task"); };
+    const tag = card.querySelector(".tag.amber");
+    if (tag) {
+      tag.classList.remove("js-gain-short");
+      tag.textContent = "已接单";
+    }
+    list.appendChild(card);
+    const sec = document.getElementById("accepted-section");
+    if (sec) sec.hidden = false;
+    applyCampus(state.campus, true);
+  }
+
   function confirmAccept() {
     const r = document.getElementById("accept-route");
     const m = document.getElementById("accept-meta");
@@ -318,6 +361,7 @@ const App = (() => {
     if (done) done.disabled = true;
     closeSheet("sheet-accept");
     paintTaskSteps(0);
+    markAccepted(route);
     const place = route.includes(" 到 ") ? route.split(" 到 ").slice(1).join(" 到 ") : "";
     if (window.API) API.createOrder({ kind: "errand", pickup: route, place });
     go("s-errand-task");
@@ -337,6 +381,13 @@ const App = (() => {
 
   function finishHelp() {
     paintTaskSteps(3);
+    const card = document.querySelector("#accepted-list .item.accepted");
+    if (card) {
+      card.classList.add("finished");
+      const tag = card.querySelector(".tag.amber");
+      if (tag) tag.textContent = "已完成";
+      card.onclick = null;
+    }
     const g = addCredit(3, "完成一次代取接单");
     if (!g) return;
     setText("errand-gain-text", "交接凭证已留存，双方各得 " + g + " 分信用。");

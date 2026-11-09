@@ -878,3 +878,12 @@ textarea.input {
 .trend-note {
   margin-top: 6px;
 }
+
+.item.accepted {
+  border-color: var(--green);
+  background: #F5F8FF;
+}
+
+.item.finished {
+  opacity: 0.65;
+}
