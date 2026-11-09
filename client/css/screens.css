@@ -21,23 +21,17 @@
 }
 
 .credit {
-  background: linear-gradient(150deg, #12785E 0%, #0B5040 100%);
-  border-radius: 18px;
-  padding: 18px 18px 16px;
-  color: #F2FAF6;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  color: var(--ink);
   position: relative;
   overflow: hidden;
 }
 
 .credit::after {
-  content: "";
-  position: absolute;
-  right: -30px;
-  top: -40px;
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.07);
+  display: none;
 }
 
 .credit .row {
@@ -51,17 +45,19 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: -1px;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
 }
 
 .credit .unit {
   font-size: 12px;
-  opacity: 0.8;
+  color: var(--muted);
   padding-bottom: 6px;
 }
 
 .credit .label {
   font-size: 12px;
-  opacity: 0.82;
+  color: var(--muted);
   letter-spacing: 0.5px;
 }
 
@@ -70,21 +66,21 @@
   display: flex;
   gap: 16px;
   font-size: 11px;
-  opacity: 0.85;
+  color: var(--muted);
 }
 
 .credit .track {
   margin-top: 14px;
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--line);
   overflow: hidden;
 }
 
 .credit .track i {
   display: block;
   height: 100%;
-  background: #F0C27B;
+  background: var(--green);
   border-radius: 2px;
 }
 
@@ -740,11 +736,11 @@ textarea.input {
   right: 14px;
   top: 14px;
   font-size: 10px;
-  color: #F2FAF6;
-  border: 1px solid rgba(255, 255, 255, 0.42);
+  color: var(--green);
+  border: 1px solid var(--line);
   border-radius: 20px;
   padding: 3px 9px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--white);
 }
 
 .entry .ico svg {
