@@ -41,6 +41,12 @@ const App = (() => {
       const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
       d += " C" + c1x.toFixed(1) + "," + c1y.toFixed(1) + " " + c2x.toFixed(1) + "," + c2y.toFixed(1) + " " + p2[0].toFixed(1) + "," + p2[1].toFixed(1);
     }
+    const now = new Date();
+    const fmt = (d) => d.getMonth() + 1 + "." + String(d.getDate()).padStart(2, "0");
+    const start = new Date(now);
+    start.setDate(now.getDate() - 6);
+    setText("trend-start", fmt(start));
+    setText("trend-end", fmt(now));
     document.querySelectorAll("svg[data-trend]").forEach((svg) => {
       const line = svg.querySelector(".line");
       const area = svg.querySelector(".area");
@@ -75,6 +81,8 @@ const App = (() => {
     });
     paintTrend();
     paintGain();
+    const left = Math.max(0, 9 - state.completed);
+    setText("review-left", left ? "还差 " + left + " 次" : "已具备");
     const log = document.getElementById("credit-log");
     if (log) {
       log.innerHTML = state.records
@@ -379,6 +387,13 @@ const App = (() => {
     const tipText = o.tip === "不加" ? "无打赏" : o.tip + " · 平台代收";
     setText("progress-tip", tipText);
     setText("proof-tip", tipText);
+    const helper = o.helper || { name: "王同学", credit: 90, eta: "18:30" };
+    setText("progress-helper", helper.name);
+    setText("progress-helper-meta", "信用 " + helper.credit + " · 顺路，预计 " + helper.eta + " 到");
+    setText("proof-helper", helper.name + " · 信用 " + helper.credit);
+    setText("proof-photo", "取餐照片 · " + o.pickup + " · " + (o.pickupTime || "18:22"));
+    setText("proof-pickup-time", o.pickupTime || "18:22");
+    setText("proof-deliver-time", o.deliveredTime || "18:31");
   }
 
   function publishErrand() {
@@ -395,6 +410,9 @@ const App = (() => {
       route: cfg.route,
       campus: state.campus,
       tip,
+      helper: { name: "王同学", credit: 90, eta: "18:30" },
+      pickupTime: "18:22",
+      deliveredTime: "18:31",
     };
     state.lastErrand = order;
     setText("mine-route", cfg.route);
