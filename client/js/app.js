@@ -548,6 +548,11 @@ const App = (() => {
 
   window.addEventListener("resize", scale);
   document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".sheet").forEach((sheet) => {
+      sheet.addEventListener("click", (e) => {
+        if (e.target === sheet) sheet.classList.remove("show");
+      });
+    });
     paintCredit();
     applyCampus(state.campus, true);
     validatePost();
