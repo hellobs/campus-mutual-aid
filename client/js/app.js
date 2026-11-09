@@ -6,7 +6,7 @@ const App = (() => {
     completed: 0,
     lastGain: null,
     lastErrand: null,
-    trend: [62, 66, 65, 72, 75, 79, 82],
+    trend: [55, 63, 69, 74, 78, 80, 82],
     records: [
       { t: "昨天 18:20", text: "按时归还四六级耳机", delta: 4 },
       { t: "11 月 3 日", text: "完成一次教材转手", delta: 5 },
@@ -43,6 +43,16 @@ const App = (() => {
     });
   }
 
+  function paintGain() {
+    const g = Math.max(1, Math.round(3 * gainFactor(state.credit)));
+    document.querySelectorAll(".js-gain").forEach((el) => {
+      el.textContent = "互助 +" + g;
+    });
+    document.querySelectorAll(".js-gain-short").forEach((el) => {
+      el.textContent = "+" + g;
+    });
+  }
+
   function paintCredit() {
     document.querySelectorAll(".js-credit").forEach((el) => {
       el.textContent = fmt(state.credit);
@@ -51,6 +61,7 @@ const App = (() => {
       el.textContent = "+" + state.monthGain;
     });
     paintTrend();
+    paintGain();
     const log = document.getElementById("credit-log");
     if (log) {
       log.innerHTML = state.records
@@ -66,9 +77,18 @@ const App = (() => {
     }
   }
 
+  function gainFactor(score) {
+    return Math.pow(Math.max(0, 100 - score) / 18, 0.9);
+  }
+
   function addCredit(n, reason) {
-    state.credit += n;
-    state.monthGain += n;
+    const gain = Math.min(100 - state.credit, Math.max(1, Math.round(n * gainFactor(state.credit))));
+    if (gain <= 0) {
+      toast("信用分已满");
+      return;
+    }
+    state.credit += gain;
+    state.monthGain += gain;
     state.completed += 1;
     const now = new Date();
     const t =
@@ -76,10 +96,10 @@ const App = (() => {
       " 月 " +
       String(now.getDate()).padStart(2, "0") +
       " 日";
-    state.records.unshift({ t, text: reason, delta: n });
-    state.lastGain = { n, reason };
+    state.records.unshift({ t, text: reason, delta: gain });
+    state.lastGain = { n: gain, reason };
     paintCredit();
-    Logger.note("credit +" + n + " " + reason);
+    Logger.note("credit +" + gain + " " + reason);
   }
 
   function syncMe(me) {
