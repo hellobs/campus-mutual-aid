@@ -395,7 +395,7 @@ window.App = App;
 
 window.go = function (id) {
   Logger.click("go:" + id);
-  if (id === "s-home" || id === "s-help" || id === "s-credit") {
+  if (id === "s-home" || id === "s-credit") {
     Router.reset(id);
     return;
   }
