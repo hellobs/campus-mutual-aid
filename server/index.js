@@ -23,8 +23,8 @@ const seed = {
     lastGain: null,
   },
   items: [
-    { id: "i1", title: "高数上册与手写笔记", condition: "九成新", mode: "寄存柜", locker: "C11 楼下 丰巢柜", slot: "周四 12:00 至 13:30", owner: "李同学", credit: 92, campus: "大学城校区" },
-    { id: "i2", title: "四六级耳机", condition: "八成新", mode: "寄存柜", locker: "C9 楼下 丰巢柜", slot: "周五 18:00 后", owner: "周同学", credit: 88, kind: "borrow", campus: "大学城校区" },
+    { id: "i1", title: "高数上册与手写笔记", condition: "九成新", mode: "寄存柜", locker: "东1门外 丰巢柜", slot: "周四 12:00 至 13:30", owner: "李同学", credit: 92, campus: "大学城校区" },
+    { id: "i2", title: "四六级耳机", condition: "八成新", mode: "寄存柜", locker: "C10 负一层 快递点", slot: "周五 18:00 后", owner: "周同学", credit: 88, kind: "borrow", campus: "大学城校区" },
   ],
   orders: [],
 };
@@ -102,7 +102,7 @@ const routes = {
 
   "POST /api/campus": async (req, res) => {
     const b = await body(req);
-    const allowed = ["大学城校区", "广州国际校区"];
+    const allowed = ["五山校区", "大学城校区", "广州国际校区"];
     if (!allowed.includes(b.campus)) return json(res, 400, { error: "不支持的校区" });
     db.me.campus = b.campus;
     save();

@@ -305,14 +305,14 @@ const App = (() => {
     const spill = chipText("chip-spill", "有汤，易洒");
     const tip = chipText("chip-tip", "3 元");
     const order = {
-      pickup: "东门 外卖柜 A12",
+      pickup: "东1门 外卖柜",
       portions,
       spill,
-      place: "C12 楼下，18:40 前",
+      place: "C12 栋楼下，18:40 前",
       tip,
     };
     state.lastErrand = order;
-    setText("mine-route", "东门 A12 到 C12 楼下");
+    setText("mine-route", "东1门 外卖柜 到 C12 栋楼下");
     setText("mine-meta", portions + " · " + spill + " · 打赏 " + tip);
     setText("mine-status", "进行中");
     const mine = document.getElementById("mine-order");
