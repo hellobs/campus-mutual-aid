@@ -5,6 +5,7 @@ const App = (() => {
     monthGain: 12,
     completed: 0,
     lastGain: null,
+    lastErrand: null,
     records: [
       { t: "昨天 18:20", text: "按时归还四六级耳机", delta: 4 },
       { t: "11 月 3 日", text: "完成一次教材转手", delta: 5 },
@@ -14,6 +15,11 @@ const App = (() => {
 
   function fmt(n) {
     return String(n);
+  }
+
+  function setText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
   }
 
   function paintCredit() {
@@ -104,6 +110,7 @@ const App = (() => {
       b.classList.toggle("on", b.dataset.tab === active);
     });
     if (id === "s-credit") paintCredit();
+    if (id === "s-errand-progress" || id === "s-errand-proof") paintErrand();
   }
 
   function undoLast() {
@@ -137,6 +144,8 @@ const App = (() => {
   }
 
   function finishErrand() {
+    if (state.lastErrand) state.lastErrand.status = "已完成";
+    setText("mine-status", "已完成");
     addCredit(3, "完成一次外卖代取");
     openSheet("sheet-errand");
     if (window.API) API.complete({ n: 3, reason: "完成一次外卖代取" }).then(syncMe);
@@ -198,6 +207,7 @@ const App = (() => {
     const m = document.getElementById("accept-meta");
     if (r) r.textContent = route;
     if (m) m.textContent = meta;
+    setText("accept-tip", (el.dataset.tip || "3 元") + " · 平台代收");
     openSheet("sheet-accept");
     Logger.click("accept:" + route);
   }
@@ -211,6 +221,9 @@ const App = (() => {
     const tm = document.getElementById("task-meta");
     if (tr) tr.textContent = route;
     if (tm) tm.textContent = meta;
+    const at = document.getElementById("accept-tip");
+    const tt = document.getElementById("task-tip");
+    if (tt && at) tt.textContent = at.textContent;
     const box = document.getElementById("proof-box");
     const pb = document.getElementById("proof-btn");
     const done = document.getElementById("task-done");
@@ -263,18 +276,54 @@ const App = (() => {
     go("s-borrow-return");
   }
 
+  function helpTab(name, btn) {
+    const pool = document.getElementById("help-pool");
+    const mine = document.getElementById("help-mine");
+    if (pool) pool.hidden = name !== "pool";
+    if (mine) mine.hidden = name !== "mine";
+    document.querySelectorAll("#help-seg button").forEach((b) => b.classList.toggle("on", b === btn));
+    Logger.click("help-tab:" + name);
+  }
+
+  function chipText(id, fallback) {
+    const el = document.querySelector("#" + id + " .chip.on");
+    return el ? el.textContent.trim() : fallback;
+  }
+
+  function paintErrand() {
+    const o = state.lastErrand;
+    if (!o) return;
+    setText("progress-pickup", o.pickup);
+    setText("progress-meta", o.portions + "，" + o.spill);
+    setText("progress-place", o.place);
+    setText("progress-tip", o.tip + " · 平台代收");
+    setText("proof-tip", o.tip + " · 平台代收");
+  }
+
   function publishErrand() {
+    const portions = chipText("chip-portions", "1 份");
+    const spill = chipText("chip-spill", "有汤，易洒");
+    const tip = chipText("chip-tip", "3 元");
+    const order = {
+      pickup: "东门 外卖柜 A12",
+      portions,
+      spill,
+      place: "C12 楼下，18:40 前",
+      tip,
+    };
+    state.lastErrand = order;
+    setText("mine-route", "东门 A12 到 C12 楼下");
+    setText("mine-meta", portions + " · " + spill + " · 打赏 " + tip);
+    setText("mine-status", "进行中");
+    const mine = document.getElementById("mine-order");
+    const empty = document.getElementById("mine-empty");
+    if (mine) mine.hidden = false;
+    if (empty) empty.hidden = true;
     if (window.API) {
-      API.createOrder({
-        kind: "errand",
-        pickup: "东门 外卖柜 A12",
-        portions: "1 份",
-        spill: "有汤，易洒",
-        place: "C12 楼下，18:40 前",
-      });
+      API.createOrder({ kind: "errand", pickup: order.pickup, portions, spill, place: order.place, tip });
     }
     toast("已发布，等待顺路的人");
-    setTimeout(() => go("s-errand-progress"), 700);
+    setTimeout(() => go("s-errand-progress"), 600);
   }
 
   function scale() {
@@ -297,7 +346,7 @@ const App = (() => {
     if (window.API) API.getMe().then(syncMe);
   });
 
-  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, uploadProof, finishHelp, applyCampus, setCampus };
+  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, uploadProof, finishHelp, applyCampus, setCampus, helpTab };
 })();
 
 window.App = App;

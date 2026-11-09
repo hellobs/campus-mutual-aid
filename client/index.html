@@ -424,9 +424,14 @@
             <span class="right">同校范围</span>
           </div>
           <div class="body">
-            <div class="section" style="margin-top:0"><h3>可接的单</h3><a id="errand-count">3 单</a></div>
+            <div class="seg" id="help-seg">
+              <button class="on" onclick="App.helpTab('pool', this)">接单</button>
+              <button onclick="App.helpTab('mine', this)">我的发布</button>
+            </div>
 
-            <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东门 外卖柜 A12 到 C12 楼下" data-meta="1 份 · 有汤 · 发布者信用 82">
+            <div id="help-pool">
+              <div class="section" style="margin-top:16px"><h3>可接的单</h3><span id="errand-count">3 单</span></div>
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东门 外卖柜 A12 到 C12 楼下" data-meta="1 份 · 有汤 · 发布者信用 82" data-tip="3 元">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>东门 外卖柜 A12 到 C12 楼下</b>
@@ -435,8 +440,7 @@
               </div>
               <span class="tag amber">+3</span>
             </button>
-
-            <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="西门 外卖柜 B03 到 C9 楼下" data-meta="2 份 · 不易洒 · 发布者信用 90">
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="西门 外卖柜 B03 到 C9 楼下" data-meta="2 份 · 不易洒 · 发布者信用 90" data-tip="3 元">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>西门 外卖柜 B03 到 C9 楼下</b>
@@ -445,8 +449,7 @@
               </div>
               <span class="tag amber">+3</span>
             </button>
-
-            <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东门 外卖柜 A08 到 C11 楼下" data-meta="1 份 · 不易洒 · 发布者信用 85">
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东门 外卖柜 A08 到 C11 楼下" data-meta="1 份 · 不易洒 · 发布者信用 85" data-tip="3 元">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>东门 外卖柜 A08 到 C11 楼下</b>
@@ -455,8 +458,7 @@
               </div>
               <span class="tag amber">+3</span>
             </button>
-
-            <button class="item" data-campus="广州国际校区" onclick="App.acceptOrder(this)" data-route="国际校区 外卖柜 D01 到 C2 楼下" data-meta="1 份 · 不易洒 · 发布者信用 88">
+              <button class="item" data-campus="广州国际校区" onclick="App.acceptOrder(this)" data-route="国际校区 外卖柜 D01 到 C2 楼下" data-meta="1 份 · 不易洒 · 发布者信用 88" data-tip="3 元">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>国际校区 外卖柜 D01 到 C2 楼下</b>
@@ -465,9 +467,20 @@
               </div>
               <span class="tag amber">+3</span>
             </button>
+            </div>
 
-            <button class="btn" style="margin-top:16px" onclick="go('s-errand-post')">发布我的代取需求</button>
-            
+            <div id="help-mine" hidden>
+              <div class="empty" id="mine-empty">还没有发布过代取</div>
+              <button class="item" id="mine-order" hidden onclick="go('s-errand-progress')">
+                <div class="thumb">餐</div>
+                <div class="info">
+                  <b id="mine-route">东门 A12 到 C12 楼下</b>
+                  <small id="mine-meta">1 份 · 有汤 · 打赏 3 元</small>
+                </div>
+                <span class="tag" id="mine-status">进行中</span>
+              </button>
+              <button class="btn" style="margin-top:16px" onclick="go('s-errand-post')">发布新需求</button>
+            </div>
           </div>
         </section>
 
@@ -497,7 +510,7 @@
               <div class="r"><span>路线</span><b id="task-route">东门 外卖柜 A12 到 C12 楼下</b></div>
               <div class="r"><span>餐品</span><b id="task-meta">1 份 · 有汤</b></div>
               <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
-              <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
+              <div class="r"><span>打赏</span><b id="task-tip">3 元 · 平台代收</b></div>
             </div>
 
             <div class="section"><h3>取餐凭证</h3></div>
@@ -527,7 +540,7 @@
             </div>
             <div class="field">
               <label>份数</label>
-              <div class="chips">
+              <div class="chips" id="chip-portions">
                 <button class="chip on" onclick="App.choose(this,'份数')">1 份</button>
                 <button class="chip" onclick="App.choose(this,'份数')">2 份</button>
                 <button class="chip" onclick="App.choose(this,'份数')">3 份以上</button>
@@ -535,7 +548,7 @@
             </div>
             <div class="field">
               <label>餐品是否易洒</label>
-              <div class="chips">
+              <div class="chips" id="chip-spill">
                 <button class="chip" onclick="App.choose(this,'易洒')">不易洒</button>
                 <button class="chip on" onclick="App.choose(this,'易洒')">有汤，易洒</button>
               </div>
@@ -546,7 +559,7 @@
             </div>
             <div class="field">
               <label>打赏</label>
-              <div class="chips">
+              <div class="chips" id="chip-tip">
                 <button class="chip" onclick="App.choose(this,'打赏')">不加</button>
                 <button class="chip on" onclick="App.choose(this,'打赏')">3 元</button>
                 <button class="chip" onclick="App.choose(this,'打赏')">5 元</button>
@@ -591,10 +604,10 @@
             <div style="height:120px;border-radius:12px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">接单者取餐后拍照上传</div>
 
             <div class="rows" style="margin-top:14px">
-              <div class="r"><span>取餐点</span><b>东门 外卖柜 A12</b></div>
-              <div class="r"><span>份数</span><b>1 份，有汤</b></div>
-              <div class="r"><span>送达</span><b>C12 楼下，18:40 前</b></div>
-              <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
+              <div class="r"><span>取餐点</span><b id="progress-pickup">东门 外卖柜 A12</b></div>
+              <div class="r"><span>份数</span><b id="progress-meta">1 份，有汤</b></div>
+              <div class="r"><span>送达</span><b id="progress-place">C12 楼下，18:40 前</b></div>
+              <div class="r"><span>打赏</span><b id="progress-tip">3 元 · 平台代收</b></div>
             </div>
           </div>
           <div class="foot">
@@ -613,7 +626,7 @@
             <div class="section"><h3>交接信息</h3></div>
             <div class="rows">
               <div class="r"><span>接单者</span><b>王同学 · 信用 90</b></div>
-              <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
+              <div class="r"><span>打赏</span><b id="proof-tip">3 元 · 平台代收</b></div>
               <div class="r"><span>取餐时间</span><b>18:22</b></div>
               <div class="r"><span>送达时间</span><b>18:31</b></div>
             </div>
@@ -696,7 +709,7 @@
             <div class="r"><span>路线</span><b id="accept-route">东门 外卖柜 A12 到 C12 楼下</b></div>
             <div class="r"><span>餐品</span><b id="accept-meta">1 份 · 有汤</b></div>
             <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
-            <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
+            <div class="r"><span>打赏</span><b id="accept-tip">3 元 · 平台代收</b></div>
           </div>
           <button class="btn" style="margin-top:14px" onclick="App.confirmAccept()">确认接单</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-accept')">再看看</button>
