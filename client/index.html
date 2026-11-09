@@ -69,7 +69,7 @@
 
             
 
-            <div class="section"><h3>进行中</h3></div>
+            <div class="section" data-campus="大学城校区"><h3>进行中</h3></div>
             <button class="item" data-campus="大学城校区" onclick="go('s-locker')">
               <div class="thumb">书</div>
               <div class="info">
@@ -281,7 +281,7 @@
             <input class="input" placeholder="搜索物品，例如四六级耳机" value="耳机">
             <div class="chips" style="margin-top:10px">
               <button class="chip on" onclick="App.choose(this,'借物筛选')">可借</button>
-              <button class="chip" onclick="App.choose(this,'借物筛选')">C9 至 C12 栋</button>
+              <button class="chip" onclick="App.choose(this,'借物筛选')">就近楼栋</button>
               <button class="chip" onclick="App.choose(this,'借物筛选')">信用免押</button>
             </div>
 
@@ -309,7 +309,7 @@
               <div class="thumb">装</div>
               <div class="info">
                 <b>正装一套 男款 M</b>
-                <small>C9 栋 · 可借 5 天 · 信用 85</small>
+                <small>D5e 栋 · 可借 5 天 · 信用 85</small>
                 <span class="tag gray" style="margin-top:2px">需押金</span>
               </div>
               <span class="tag amber">可借</span>
@@ -450,7 +450,7 @@
 
             <div id="help-pool">
               <div class="section" style="margin-top:16px"><h3>可接的单</h3><span id="errand-count">3 单</span></div>
-              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东1门 外卖柜 到 C12 栋楼下" data-meta="1 份 · 有汤 · 发布者信用 82" data-tip="3 元">
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="东1门 外卖柜 到 C12 栋楼下" data-meta="1 份 · 有汤" data-tip="3 元" data-owner="陈同学" data-credit="82">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>东1门 外卖柜 到 C12 栋楼下</b>
@@ -459,7 +459,7 @@
               </div>
               <span class="tag amber js-gain-short">+3</span>
             </button>
-              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="二饭对面 外卖柜 到 C9 栋楼下" data-meta="2 份 · 不易洒 · 发布者信用 90" data-tip="3 元">
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="二饭对面 外卖柜 到 C9 栋楼下" data-meta="2 份 · 不易洒" data-tip="3 元" data-owner="周同学" data-credit="90">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>二饭对面 外卖柜 到 C9 栋楼下</b>
@@ -468,7 +468,7 @@
               </div>
               <span class="tag amber js-gain-short">+3</span>
             </button>
-              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="一饭天桥 外卖柜 到 C11 栋楼下" data-meta="1 份 · 不易洒 · 发布者信用 85" data-tip="3 元">
+              <button class="item" data-campus="大学城校区" onclick="App.acceptOrder(this)" data-route="一饭天桥 外卖柜 到 C11 栋楼下" data-meta="1 份 · 不易洒" data-tip="3 元" data-owner="林同学" data-credit="85">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>一饭天桥 外卖柜 到 C11 栋楼下</b>
@@ -477,7 +477,7 @@
               </div>
               <span class="tag amber js-gain-short">+3</span>
             </button>
-              <button class="item" data-campus="广州国际校区" onclick="App.acceptOrder(this)" data-route="D3b 楼下 外卖柜 到 D5e 学生社区" data-meta="1 份 · 不易洒 · 发布者信用 88" data-tip="3 元">
+              <button class="item" data-campus="广州国际校区" onclick="App.acceptOrder(this)" data-route="D3b 楼下 外卖柜 到 D5e 学生社区" data-meta="1 份 · 不易洒" data-tip="3 元" data-owner="李同学" data-credit="88">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>D3b 楼下 外卖柜 到 D5e 学生社区</b>
@@ -486,7 +486,7 @@
               </div>
               <span class="tag amber js-gain-short">+3</span>
             </button>
-            <button class="item" data-campus="五山校区" onclick="App.acceptOrder(this)" data-route="33号楼 外卖柜 到 北四栋楼下" data-meta="1 份 · 不易洒 · 发布者信用 86" data-tip="3 元">
+            <button class="item" data-campus="五山校区" onclick="App.acceptOrder(this)" data-route="33号楼 外卖柜 到 北四栋楼下" data-meta="1 份 · 不易洒" data-tip="3 元" data-owner="王同学" data-credit="86">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>33号楼 外卖柜 到 北四栋楼下</b>
@@ -496,7 +496,7 @@
               <span class="tag amber js-gain-short">+3</span>
             </button>
 
-            <button class="item" data-campus="五山校区" onclick="App.acceptOrder(this)" data-route="博学楼 外卖柜 到 西七栋楼下" data-meta="2 份 · 有汤 · 发布者信用 89" data-tip="5 元">
+            <button class="item" data-campus="五山校区" onclick="App.acceptOrder(this)" data-route="博学楼 外卖柜 到 西七栋楼下" data-meta="2 份 · 有汤" data-tip="5 元" data-owner="赵同学" data-credit="89">
               <div class="thumb">餐</div>
               <div class="info">
                 <b>博学楼 外卖柜 到 西七栋楼下</b>
@@ -536,10 +536,10 @@
             </div>
 
             <div class="card" style="display:flex;align-items:center;gap:11px;margin-top:16px">
-              <div class="thumb" style="width:42px;height:42px;border-radius:50%">陈</div>
+              <div class="thumb" id="task-avatar" style="width:42px;height:42px;border-radius:50%">陈</div>
               <div style="flex:1">
-                <b style="font-size:13px">陈同学</b>
-                <div class="hint" style="margin-top:2px">信用 82 · 已发布 12 分钟</div>
+                <b id="task-owner" style="font-size:13px">陈同学</b>
+                <div class="hint" id="task-owner-meta" style="margin-top:2px">信用 82 · 已发布 12 分钟</div>
               </div>
               <span class="tag">待取餐</span>
             </div>
@@ -547,7 +547,7 @@
             <div class="rows" style="margin-top:14px">
               <div class="r"><span>路线</span><b id="task-route">东1门 外卖柜 到 C12 栋楼下</b></div>
               <div class="r"><span>餐品</span><b id="task-meta">1 份 · 有汤</b></div>
-              <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
+              <div class="r"><span>信用激励</span><b class="amber-t">完成 <span class="js-gain-short">+3</span> 分</b></div>
               <div class="r"><span>打赏</span><b id="task-tip">3 元 · 平台代收</b></div>
             </div>
 
@@ -572,7 +572,7 @@
             <div class="field">
               <label>取餐点</label>
               <div class="input" style="display:flex;justify-content:space-between;align-items:center">
-                东1门 外卖柜
+                <span id="post-pickup">东1门 外卖柜</span>
                 <span class="tag">可扫码</span>
               </div>
             </div>
@@ -593,7 +593,7 @@
             </div>
             <div class="field">
               <label>送达地点与时间</label>
-              <div class="input">C12 栋楼下，18:40 前</div>
+              <div class="input"><span id="post-place">C12 栋楼下，18:40 前</span></div>
             </div>
             <div class="field">
               <label>打赏</label>
@@ -605,8 +605,7 @@
               </div>
             </div>
             <div class="rows" style="margin-top:16px">
-              <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
-              <div class="r"><span>打赏</span><b>3 元 · 平台代收</b></div>
+              <div class="r"><span>信用激励</span><b class="amber-t">完成 <span class="js-gain-short">+3</span> 分</b></div>
             </div>
             
           </div>
@@ -751,7 +750,7 @@
           <div class="rows">
             <div class="r"><span>路线</span><b id="accept-route">东1门 外卖柜 到 C12 栋楼下</b></div>
             <div class="r"><span>餐品</span><b id="accept-meta">1 份 · 有汤</b></div>
-            <div class="r"><span>信用激励</span><b class="amber-t">完成 +3 分</b></div>
+            <div class="r"><span>信用激励</span><b class="amber-t">完成 <span class="js-gain-short">+3</span> 分</b></div>
             <div class="r"><span>打赏</span><b id="accept-tip">3 元 · 平台代收</b></div>
           </div>
           <button class="btn" style="margin-top:14px" onclick="App.confirmAccept()">确认接单</button>
@@ -777,8 +776,8 @@
           <div class="done">
             <div class="mark">✓</div>
             <h3>交付完成</h3>
-            <p>你和对方各得 5 分信用，已记入信用记录。</p>
-            <div class="gain">信用分 +5</div>
+            <p id="review-gain-text">你和对方各得 5 分信用，已记入信用记录。</p>
+            <div class="gain" id="review-gain">信用分 +5</div>
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-review');Router.reset('s-home')">回到首页</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.undoLast()">2 小时内撤回</button>
@@ -790,8 +789,8 @@
           <div class="done">
             <div class="mark">✓</div>
             <h3>归还完成</h3>
-            <p>对方已确认收回，按时归还记 4 分信用。</p>
-            <div class="gain">信用分 +4</div>
+            <p id="borrow-gain-text">对方已确认收回，按时归还记 4 分信用。</p>
+            <div class="gain" id="borrow-gain">信用分 +4</div>
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-borrow');Router.reset('s-credit')">查看信用记录</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.undoLast()">2 小时内撤回</button>
@@ -803,8 +802,8 @@
           <div class="done">
             <div class="mark">✓</div>
             <h3>代取完成</h3>
-            <p>交接凭证已留存，双方各得 3 分信用。</p>
-            <div class="gain">信用分 +3</div>
+            <p id="errand-gain-text">交接凭证已留存，双方各得 3 分信用。</p>
+            <div class="gain" id="errand-gain">信用分 +3</div>
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-errand');Router.reset('s-credit')">查看信用记录</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.undoLast()">2 小时内撤回</button>

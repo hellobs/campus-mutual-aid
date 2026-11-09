@@ -1,4 +1,10 @@
 const App = (() => {
+  const ERRAND = {
+    "大学城校区": { pickup: "东1门 外卖柜", place: "C12 栋楼下，18:40 前", route: "东1门 外卖柜 到 C12 栋楼下" },
+    "五山校区": { pickup: "33号楼 外卖柜", place: "北四栋楼下，18:40 前", route: "33号楼 外卖柜 到 北四栋楼下" },
+    "广州国际校区": { pickup: "D3b 楼下 外卖柜", place: "D5e 学生社区，18:40 前", route: "D3b 楼下 外卖柜 到 D5e 学生社区" },
+  };
+
   const state = {
     credit: 82,
     campus: "大学城校区",
@@ -44,12 +50,12 @@ const App = (() => {
   }
 
   function paintGain() {
-    const g = Math.max(1, Math.round(3 * gainFactor(state.credit)));
+    const g = state.credit >= 100 ? 0 : Math.max(1, Math.round(3 * gainFactor(state.credit)));
     document.querySelectorAll(".js-gain").forEach((el) => {
-      el.textContent = "互助 +" + g;
+      el.textContent = g ? "互助 +" + g : "互助 已满";
     });
     document.querySelectorAll(".js-gain-short").forEach((el) => {
-      el.textContent = "+" + g;
+      el.textContent = g ? "+" + g : "0";
     });
   }
 
@@ -85,7 +91,7 @@ const App = (() => {
     const gain = Math.min(100 - state.credit, Math.max(1, Math.round(n * gainFactor(state.credit))));
     if (gain <= 0) {
       toast("信用分已满");
-      return;
+      return 0;
     }
     state.credit += gain;
     state.monthGain += gain;
@@ -100,6 +106,7 @@ const App = (() => {
     state.lastGain = { n: gain, reason };
     paintCredit();
     Logger.note("credit +" + gain + " " + reason);
+    return gain;
   }
 
   function syncMe(me) {
@@ -166,6 +173,10 @@ const App = (() => {
     state.completed = Math.max(0, state.completed - 1);
     state.records.shift();
     state.lastGain = null;
+    if (state.lastErrand && state.lastErrand.status === "已完成") {
+      state.lastErrand.status = "进行中";
+      setText("mine-status", "进行中");
+    }
     paintCredit();
     document.querySelectorAll(".sheet").forEach((el) => el.classList.remove("show"));
     toast("已撤回，扣回 " + n + " 分信用");
@@ -174,23 +185,32 @@ const App = (() => {
   }
 
   function finishReview() {
-    addCredit(5, "完成一次教材转手");
+    const g = addCredit(5, "完成一次教材转手");
+    if (!g) return;
+    setText("review-gain-text", "你和对方各得 " + g + " 分信用，已记入信用记录。");
+    setText("review-gain", "信用分 +" + g);
     openSheet("sheet-review");
-    if (window.API) API.complete({ n: 5, reason: "完成一次教材转手" }).then(syncMe);
+    if (window.API) API.complete({ n: g, reason: "完成一次教材转手" }).then(syncMe);
   }
 
   function finishBorrow() {
-    addCredit(4, "按时归还四六级耳机");
+    const g = addCredit(4, "按时归还四六级耳机");
+    if (!g) return;
+    setText("borrow-gain-text", "对方已确认收回，按时归还记 " + g + " 分信用。");
+    setText("borrow-gain", "信用分 +" + g);
     openSheet("sheet-borrow");
-    if (window.API) API.complete({ n: 4, reason: "按时归还四六级耳机" }).then(syncMe);
+    if (window.API) API.complete({ n: g, reason: "按时归还四六级耳机" }).then(syncMe);
   }
 
   function finishErrand() {
     if (state.lastErrand) state.lastErrand.status = "已完成";
     setText("mine-status", "已完成");
-    addCredit(3, "完成一次外卖代取");
+    const g = addCredit(3, "完成一次外卖代取");
+    if (!g) return;
+    setText("errand-gain-text", "交接凭证已留存，双方各得 " + g + " 分信用。");
+    setText("errand-gain", "信用分 +" + g);
     openSheet("sheet-errand");
-    if (window.API) API.complete({ n: 3, reason: "完成一次外卖代取" }).then(syncMe);
+    if (window.API) API.complete({ n: g, reason: "完成一次外卖代取" }).then(syncMe);
   }
 
   function toggle(el, name) {
@@ -210,10 +230,13 @@ const App = (() => {
 
   function applyCampus(name, silent) {
     state.campus = name;
+    const cfg = ERRAND[name];
+    if (cfg) {
+      setText("post-pickup", cfg.pickup);
+      setText("post-place", cfg.place);
+    }
     const chip = document.getElementById("campus-chip");
     if (chip) chip.textContent = name;
-    const note = document.getElementById("campus-note");
-    if (note) note.textContent = "仅显示" + name + "的内容";
     document.querySelectorAll("[data-campus]").forEach((el) => {
       el.style.display = el.dataset.campus === name ? "" : "none";
     });
@@ -250,6 +273,10 @@ const App = (() => {
     if (r) r.textContent = route;
     if (m) m.textContent = meta;
     setText("accept-tip", (el.dataset.tip || "3 元") + " · 平台代收");
+    const owner = el.dataset.owner || "同校同学";
+    setText("task-owner", owner);
+    setText("task-owner-meta", "信用 " + (el.dataset.credit || "82") + " · 刚发布");
+    setText("task-avatar", owner[0]);
     openSheet("sheet-accept");
     Logger.click("accept:" + route);
   }
@@ -273,7 +300,8 @@ const App = (() => {
     if (pb) pb.disabled = false;
     if (done) done.disabled = true;
     closeSheet("sheet-accept");
-    if (window.API) API.createOrder({ kind: "errand", pickup: route, place: meta });
+    const place = route.includes(" 到 ") ? route.split(" 到 ").slice(1).join(" 到 ") : "";
+    if (window.API) API.createOrder({ kind: "errand", pickup: route, place });
     go("s-errand-task");
   }
 
@@ -289,9 +317,12 @@ const App = (() => {
   }
 
   function finishHelp() {
-    addCredit(3, "完成一次代取接单");
+    const g = addCredit(3, "完成一次代取接单");
+    if (!g) return;
+    setText("errand-gain-text", "交接凭证已留存，双方各得 " + g + " 分信用。");
+    setText("errand-gain", "信用分 +" + g);
     openSheet("sheet-errand");
-    if (window.API) API.complete({ n: 3, reason: "完成一次代取接单" }).then(syncMe);
+    if (window.API) API.complete({ n: g, reason: "完成一次代取接单" }).then(syncMe);
   }
 
   function validatePost() {
@@ -338,31 +369,36 @@ const App = (() => {
     setText("progress-pickup", o.pickup);
     setText("progress-meta", o.portions + "，" + o.spill);
     setText("progress-place", o.place);
-    setText("progress-tip", o.tip + " · 平台代收");
-    setText("proof-tip", o.tip + " · 平台代收");
+    const tipText = o.tip === "不加" ? "无打赏" : o.tip + " · 平台代收";
+    setText("progress-tip", tipText);
+    setText("proof-tip", tipText);
   }
 
   function publishErrand() {
+    const cfg = ERRAND[state.campus] || ERRAND["大学城校区"];
     const portions = chipText("chip-portions", "1 份");
     const spill = chipText("chip-spill", "有汤，易洒");
     const tip = chipText("chip-tip", "3 元");
+    const tipText = tip === "不加" ? "无打赏" : "打赏 " + tip;
     const order = {
-      pickup: "东1门 外卖柜",
+      pickup: cfg.pickup,
       portions,
       spill,
-      place: "C12 栋楼下，18:40 前",
+      place: cfg.place,
+      route: cfg.route,
+      campus: state.campus,
       tip,
     };
     state.lastErrand = order;
-    setText("mine-route", "东1门 外卖柜 到 C12 栋楼下");
-    setText("mine-meta", portions + " · " + spill + " · 打赏 " + tip);
+    setText("mine-route", cfg.route);
+    setText("mine-meta", portions + " · " + spill + " · " + tipText);
     setText("mine-status", "进行中");
     const mine = document.getElementById("mine-order");
     const empty = document.getElementById("mine-empty");
     if (mine) mine.hidden = false;
     if (empty) empty.hidden = true;
     if (window.API) {
-      API.createOrder({ kind: "errand", pickup: order.pickup, portions, spill, place: order.place, tip });
+      API.createOrder({ kind: "errand", pickup: order.pickup, portions, spill, place: order.place, tip: tip === "不加" ? "0 元" : tip, campus: state.campus });
     }
     toast("已发布，等待顺路的人");
     setTimeout(() => go("s-errand-progress"), 600);
