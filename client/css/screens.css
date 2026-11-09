@@ -478,11 +478,11 @@ textarea.input {
   flex: none;
 }
 
-.step.done {
+.step.step-done {
   color: var(--green);
 }
 
-.step.done::before {
+.step.step-done::before {
   background: var(--green);
 }
 
