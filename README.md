@@ -49,7 +49,7 @@ npm start
 
 ```
 client/              前端，纯静态
-  index.html         16 屏
+  index.html         17 屏
   css/               设计令牌、手机框、组件
   js/api.js          唯一的网络层，集中所有 fetch
   js/app.js          界面状态与信用分展示

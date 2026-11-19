@@ -411,13 +411,12 @@ const App = (() => {
       return;
     }
     if (window.API) API.createItem({ title }).then(() => {});
-    toast("已发布，等待同校同学");
-    setTimeout(() => go("s-detail"), 700);
+    openSheet("sheet-publish");
   }
 
   function applyBorrow() {
     if (window.API) API.createOrder({ kind: "borrow", place: "C9 楼下 丰巢柜" });
-    go("s-borrow-return");
+    openSheet("sheet-borrow-result");
   }
 
   function helpTab(name, btn) {

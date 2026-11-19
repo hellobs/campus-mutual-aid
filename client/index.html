@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>校内闲置与互助 · 交互原型</title>
+<title>校内闲置与互助小程序 · 交互原型</title>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/phone.css">
 <link rel="stylesheet" href="css/screens.css">
@@ -28,8 +28,8 @@
           <div class="body">
             <div class="hero">
               <div class="hi">华南理工大学 · <button class="campus" id="campus-chip" onclick="App.openSheet('sheet-campus')">大学城校区</button></div>
-              <h2>校内闲置与互助</h2>
-              
+              <h2>校内闲置与互助小程序</h2>
+              <p class="hint">交互设计与原型评估</p>
             </div>
 
             <div class="credit">
@@ -138,6 +138,16 @@
                 东1门外 丰巢柜
                 <span class="tag">可扫码</span>
               </div>
+            </div>
+
+            <div class="section"><h3>出借人</h3></div>
+            <div class="card" style="display:flex;align-items:center;gap:11px">
+              <div class="thumb" style="width:42px;height:42px;border-radius:50%">李</div>
+              <div style="flex:1">
+                <b style="font-size:13px">李同学</b>
+                <div class="hint" style="margin-top:2px">信用 82 · C11 栋 · 同校已认证</div>
+              </div>
+              <span class="tag">本人</span>
             </div>
             
           </div>
@@ -816,6 +826,32 @@
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-errand');Router.reset('s-credit')">查看信用记录</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.undoLast()">2 小时内撤回</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-publish">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-publish')">×</button>
+          <div class="done">
+            <div class="mark">✓</div>
+            <h3>发布成功</h3>
+            <p>同校同学现在可以在列表里看到这条闲置。</p>
+          </div>
+          <button class="btn" onclick="App.closeSheet('sheet-publish');go('s-detail')">查看详情</button>
+          <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-publish');Router.reset('s-home')">返回首页</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-borrow-result">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-borrow-result')">×</button>
+          <div class="done">
+            <div class="mark">✓</div>
+            <h3>申请成功</h3>
+            <p>对方同意您的借物申请。请在 11 月 12 日 18:00 前归还。</p>
+          </div>
+          <button class="btn" onclick="App.closeSheet('sheet-borrow-result');go('s-borrow-return')">查看详情</button>
+          <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-borrow-result');go('s-borrow')">返回</button>
         </div>
       </div>
 
