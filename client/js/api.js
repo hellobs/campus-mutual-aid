@@ -129,18 +129,6 @@ const API = (() => {
     });
   }
 
-  async function getItems() {
-    return run(async () =>
-      check(
-        await db()
-          .from("demo_items")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(50)
-      )
-    );
-  }
-
   async function createItem(payload) {
     return run(async () => {
       const row = await getState();
@@ -161,18 +149,6 @@ const API = (() => {
       };
       return check(await db().from("demo_items").insert(item).select().single());
     });
-  }
-
-  async function getOrders() {
-    return run(async () =>
-      check(
-        await db()
-          .from("demo_orders")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(50)
-      )
-    );
   }
 
   async function createOrder(payload) {
@@ -199,9 +175,7 @@ const API = (() => {
     complete,
     undo,
     setCampus,
-    getItems,
     createItem,
-    getOrders,
     createOrder,
   };
 })();

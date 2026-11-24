@@ -53,6 +53,7 @@ npm start
 client/              前端，纯静态
   index.html         19 屏
   css/               设计令牌、手机框、组件
+  js/config.js       场景常量与两级地点字典
   js/cloud.js        WorkBuddy Cloud 初始化，使用 publicConfig
   js/api.js          唯一的数据层，集中所有云数据库读写
   js/app.js          界面状态与信用分展示
@@ -60,7 +61,7 @@ client/              前端，纯静态
   js/logger.js       可用性测试埋点与 CSV 导出
 
 server/              本地预览用的静态服务，无依赖
-  index.js           本地静态托管
+  index.js           只托管静态文件，旧 REST 接口与 store.json 已移除
 ```
 
 前端不直接改云端表，所有写操作集中在 js/api.js。云端返回最新的用户状态，前端用返回值覆盖本地缓存。
@@ -74,6 +75,8 @@ server/              本地预览用的静态服务，无依赖
 | demo_orders | 借用与代取订单 |
 
 这三张表是课程原型的共享演示数据，便于现场演示和多设备查看，不对应真实账号。课程作业不涉及真实用户资料。
+
+代码维护时按职责分文件改：场景文案、地点字典和进度状态放在 config.js，界面状态与交互放在 app.js，云端读写放在 api.js，路由放在 router.js。本地 server 只负责静态预览，不再保存业务数据。
 
 ## 三条流程
 

@@ -1,10 +1,4 @@
 const App = (() => {
-  const ERRAND = {
-    "大学城校区": { pickup: "东1门 外卖柜", place: "C12 栋楼下，18:40 前", route: "东1门 外卖柜 到 C12 栋楼下" },
-    "五山校区": { pickup: "33号楼 外卖柜", place: "北四栋楼下，18:40 前", route: "33号楼 外卖柜 到 北四栋楼下" },
-    "广州国际校区": { pickup: "D3b 楼下 外卖柜", place: "D5e 学生社区，18:40 前", route: "D3b 楼下 外卖柜 到 D5e 学生社区" },
-  };
-
   const state = {
     credit: 82,
     campus: "大学城校区",
@@ -248,7 +242,7 @@ const App = (() => {
 
   function applyCampus(name, silent) {
     state.campus = name;
-    const cfg = ERRAND[name];
+    const cfg = CONFIG.ERRAND[name];
     if (cfg) {
       setText("post-pickup", cfg.pickup);
       setText("post-place", cfg.place);
@@ -470,10 +464,8 @@ const App = (() => {
     el.classList.toggle("now", mode === "now");
   }
 
-  const ERRAND_STAGES = ["等待接单", "已接单", "取餐中", "已送达", "已完成"];
-
   function paintProgressSteps(status) {
-    const idx = Math.max(0, ERRAND_STAGES.indexOf(status));
+    const idx = Math.max(0, CONFIG.ERRAND_STAGES.indexOf(status));
     stepState("pstep-0", idx === 0 ? "now" : idx >= 1 ? "done" : "");
     stepState("pstep-1", idx === 1 ? "now" : idx >= 2 ? "done" : "");
     stepState("pstep-2", idx === 2 ? "now" : idx >= 3 ? "done" : "");
@@ -505,7 +497,7 @@ const App = (() => {
     setText("proof-pickup-time", o.pickupTime || "18:22");
     setText("proof-deliver-time", o.deliveredTime || "18:31");
     const status = o.status || "等待接单";
-    const idx = Math.max(0, ERRAND_STAGES.indexOf(status));
+    const idx = Math.max(0, CONFIG.ERRAND_STAGES.indexOf(status));
     paintProgressSteps(status);
     const card = document.getElementById("progress-helper-card");
     if (card) card.hidden = idx < 1;
@@ -515,7 +507,7 @@ const App = (() => {
   }
 
   function publishErrand() {
-    const cfg = ERRAND[state.campus] || ERRAND["大学城校区"];
+    const cfg = CONFIG.ERRAND[state.campus] || CONFIG.ERRAND["大学城校区"];
     const portions = chipText("chip-portions", "1 份");
     const spill = chipText("chip-spill", "有汤，易洒");
     const tip = chipText("chip-tip", "3 元");
@@ -559,16 +551,6 @@ const App = (() => {
   }
 
 
-  const ADDRESS_LEVEL1 = {
-    pickup: ["校门", "柜区", "详细地址"],
-    deliver: ["楼栋", "详细地址"]
-  };
-  const ADDRESS_LEVEL2 = {
-    "校门": ["东一门", "西一门", "校门口"],
-    "柜区": ["西一门快递架", "西一门美团柜", "西二门外卖架", "东一门外卖架"],
-    "楼栋": ["C1", "C2", "C7", "C9", "C10", "C11", "C12", "A1", "A5"]
-  };
-
   function renderAddressOptions(list) {
     const box = document.getElementById("address-options");
     if (!box) return;
@@ -586,7 +568,7 @@ const App = (() => {
     const note = document.getElementById("address-note");
     if (custom) { custom.style.display = "none"; custom.value = ""; }
     if (note) note.value = "";
-    renderAddressOptions(ADDRESS_LEVEL1[kind] || []);
+    renderAddressOptions(CONFIG.ADDRESS_LEVEL1[kind] || []);
     openSheet("sheet-address");
   }
 
@@ -601,10 +583,10 @@ const App = (() => {
       return;
     }
     if (custom) custom.style.display = "none";
-    if (ADDRESS_LEVEL2[value]) {
+    if (CONFIG.ADDRESS_LEVEL2[value]) {
       state.addressGroup = value;
       state.pendingAddress = "";
-      renderAddressOptions(["返回上一级"].concat(ADDRESS_LEVEL2[value]));
+      renderAddressOptions(["返回上一级"].concat(CONFIG.ADDRESS_LEVEL2[value]));
       setText("address-title", state.addressGroup);
       return;
     }
@@ -633,7 +615,7 @@ const App = (() => {
         paintErrand();
       }
     } else {
-      const cfg = ERRAND[state.campus] || ERRAND["大学城校区"];
+      const cfg = CONFIG.ERRAND[state.campus] || CONFIG.ERRAND["大学城校区"];
       const time = cfg.place.includes("，") ? cfg.place.split("，").slice(1).join("，") : "18:40 前";
       setText("post-place", value + "，" + time);
       if (state.lastErrand) {
