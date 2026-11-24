@@ -547,6 +547,7 @@
               <div class="step" id="tstep-1">取餐中</div>
               <div class="step" id="tstep-2">已送达</div>
             </div>
+            <div style="margin-top:10px"><span class="tag">我现在是接单方</span></div>
 
             <div class="card" style="display:flex;align-items:center;gap:11px;margin-top:16px">
               <div class="thumb" id="task-avatar" style="width:42px;height:42px;border-radius:50%">陈</div>
@@ -566,12 +567,13 @@
 
             <div class="section"><h3>取餐凭证</h3></div>
             <div id="proof-box" style="height:120px;border-radius:12px;background:#EEF2F7;display:grid;place-items:center;color:#98A2B3;font-size:12px">取餐后拍照上传</div>
-            <button class="btn ghost" id="proof-btn" style="margin-top:10px" onclick="App.uploadProof()">拍照上传</button>
+            <button class="btn ghost" id="proof-btn" style="margin-top:10px" onclick="App.openSheet('sheet-photo')">拍照上传</button>
 
             
           </div>
           <div class="foot">
-            <button class="btn" id="task-done" disabled onclick="App.finishHelp()">我已送达</button>
+            <button class="btn" id="task-done" disabled onclick="App.confirmDelivery()">我已送达</button>
+            <button class="btn ghost" style="margin-top:8px" onclick="App.openSheet('sheet-cancel')">取消订单</button>
           </div>
         </section>
 
@@ -579,15 +581,15 @@
           <div class="nav">
             <button class="back" onclick="back()">‹</button>
             <h1>代取外卖</h1>
-            <span class="right">互助</span>
+            <span class="right">我现在是发单方</span>
           </div>
           <div class="body">
             <div class="field">
               <label>取餐点</label>
-              <div class="input" style="display:flex;justify-content:space-between;align-items:center">
+              <button class="input" style="display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left" onclick="App.openAddress('pickup')">
                 <span id="post-pickup">东1门 外卖柜</span>
-                <span class="tag">可扫码</span>
-              </div>
+                <span class="tag">选柜机</span>
+              </button>
             </div>
             <div class="field">
               <label>份数</label>
@@ -606,7 +608,10 @@
             </div>
             <div class="field">
               <label>送达地点与时间</label>
-              <div class="input"><span id="post-place">C12 栋楼下，18:40 前</span></div>
+              <button class="input" style="display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left" onclick="App.openAddress('deliver')">
+                <span id="post-place">C12 栋楼下，18:40 前</span>
+                <span class="tag">选楼栋</span>
+              </button>
             </div>
             <div class="field">
               <label>打赏</label>
@@ -639,6 +644,7 @@
               <div class="step step-done" id="pstep-1">已接单</div>
               <div class="step now" id="pstep-2">取餐中</div>
               <div class="step" id="pstep-3">已送达</div>
+              <div class="step" id="pstep-4">已完成</div>
             </div>
 
             <div class="card" id="progress-helper-card" hidden style="display:flex;align-items:center;gap:11px;margin-top:16px">
@@ -662,6 +668,7 @@
           </div>
           <div class="foot">
             <button class="btn" id="progress-confirm" disabled onclick="go('s-errand-proof')">查看凭证并确认</button>
+            <button class="btn ghost" style="margin-top:8px" onclick="App.openSheet('sheet-cancel')">取消需求</button>
           </div>
         </section>
 
@@ -820,9 +827,13 @@
           <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-errand')">×</button>
           <div class="done">
             <div class="mark">✓</div>
-            <h3>代取完成</h3>
+            <h3>代取结果</h3>
             <p id="errand-gain-text">交接凭证已留存，双方各得 3 分信用。</p>
             <div class="gain" id="errand-gain">信用分 +3</div>
+            <div class="rows" style="margin-top:12px">
+              <div class="r"><span>代取信息</span><b id="result-info">1 份 · 有汤 · 3 元</b></div>
+              <div class="r"><span>实物照片</span><b>已留存</b></div>
+            </div>
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-errand');Router.reset('s-credit')">查看信用记录</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.undoLast()">2 小时内撤回</button>
@@ -852,6 +863,74 @@
           </div>
           <button class="btn" onclick="App.closeSheet('sheet-borrow-result');go('s-borrow-return')">查看详情</button>
           <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-borrow-result');go('s-borrow')">返回</button>
+        </div>
+      </div>
+
+
+      <div class="sheet" id="sheet-errand-publish">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-errand-publish')">×</button>
+          <div class="done">
+            <div class="mark">✓</div>
+            <h3>发布成功！</h3>
+            <p>需求已经发布，正在等待同校顺路的人接单。</p>
+          </div>
+          <button class="btn" onclick="App.closeSheet('sheet-errand-publish');go('s-errand-progress')">查看进度</button>
+          <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-errand-publish');go('s-errand')">返回</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-address">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-address')">×</button>
+          <h3 id="address-title">选择地点</h3>
+          <div class="rows" id="address-options"></div>
+          <input class="input" id="address-custom" placeholder="输入详细地点" style="margin-top:12px;display:none">
+          <button class="btn" style="margin-top:14px" onclick="App.confirmAddress()">确定</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-photo">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-photo')">×</button>
+          <h3>选择照片来源</h3>
+          <div class="rows">
+            <button class="r" onclick="App.takePhoto('拍照')"><span>拍照</span><b>现场拍</b></button>
+            <button class="r" onclick="App.takePhoto('选择系统照片')"><span>选择系统照片</span><b>从相册选</b></button>
+          </div>
+          <button class="btn ghost" style="margin-top:14px" onclick="App.closeSheet('sheet-photo')">取消</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-deliver">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-deliver')">×</button>
+          <h3>确定送达吗？</h3>
+          <p class="hint">确认后需求方会收到取餐凭证，双方信用分在对方确认后入账。</p>
+          <button class="btn" style="margin-top:14px" onclick="App.doDeliver()">确认送达</button>
+          <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-deliver')">再看看</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-cancel">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-cancel')">×</button>
+          <h3>确定要取消订单吗？</h3>
+          <p class="hint">取消后需求回到待接单状态，已经支付的打赏会退回。</p>
+          <button class="btn" style="margin-top:14px" onclick="App.doCancel()">确定取消</button>
+          <button class="btn ghost" style="margin-top:8px" onclick="App.closeSheet('sheet-cancel')">再想想</button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet-cancel-success">
+        <div class="panel">
+          <button class="close" aria-label="关闭" onclick="App.closeSheet('sheet-cancel-success')">×</button>
+          <div class="done">
+            <div class="mark">✓</div>
+            <h3>取消成功！</h3>
+            <p>订单已经取消，打赏会原路退回。</p>
+          </div>
+          <button class="btn" onclick="App.closeSheet('sheet-cancel-success');go('s-errand')">返回</button>
         </div>
       </div>
 

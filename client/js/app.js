@@ -455,6 +455,7 @@ const App = (() => {
     stepState("pstep-1", idx === 1 ? "now" : idx >= 2 ? "done" : "");
     stepState("pstep-2", idx === 2 ? "now" : idx >= 3 ? "done" : "");
     stepState("pstep-3", idx === 3 ? "now" : idx >= 4 ? "done" : "");
+    stepState("pstep-4", idx >= 4 ? "now" : "");
   }
 
   function paintTaskSteps(phase) {
@@ -530,8 +531,93 @@ const App = (() => {
     if (window.API) {
       API.createOrder({ kind: "errand", pickup: order.pickup, portions, spill, place: order.place, tip: tip === "不加" ? "0 元" : tip, campus: state.campus });
     }
-    toast("已发布，等待顺路的人");
-    setTimeout(() => go("s-errand-progress"), 600);
+    setText("result-info", portions + " · " + spill + " · " + tipText);
+    openSheet("sheet-errand-publish");
+  }
+
+
+  const ADDRESS_OPTIONS = {
+    pickup: ["西一门快递架", "西一门美团柜", "西二门外卖架", "东一门外卖架", "详细地址"],
+    deliver: ["C1", "C2", "C7", "C9", "C10", "C11", "C12", "A1", "A5", "详细地址"]
+  };
+
+  function openAddress(kind) {
+    state.addressKind = kind;
+    state.pendingAddress = "";
+    setText("address-title", kind === "pickup" ? "选择取餐点" : "选择送达楼栋");
+    const box = document.getElementById("address-options");
+    const custom = document.getElementById("address-custom");
+    if (custom) { custom.style.display = "none"; custom.value = ""; }
+    if (box) {
+      box.innerHTML = (ADDRESS_OPTIONS[kind] || []).map((v) =>
+        '<button class="r" data-address="' + v + '" onclick="App.chooseAddress(this)"><span>' + v + '</span><b></b></button>'
+      ).join("");
+    }
+    openSheet("sheet-address");
+  }
+
+  function chooseAddress(el) {
+    state.pendingAddress = el.dataset.address || "";
+    document.querySelectorAll("#address-options .r").forEach((b) => b.classList.remove("on"));
+    el.classList.add("on");
+    const custom = document.getElementById("address-custom");
+    if (custom) custom.style.display = state.pendingAddress === "详细地址" ? "block" : "none";
+  }
+
+  function confirmAddress() {
+    const custom = document.getElementById("address-custom");
+    let value = state.pendingAddress || "";
+    if (value === "详细地址" && custom) {
+      value = custom.value.trim() || "详细地址";
+    }
+    if (!value) { toast("先选一个地点"); return; }
+    if (state.addressKind === "pickup") {
+      setText("post-pickup", value);
+      if (state.lastErrand) {
+        state.lastErrand.pickup = value;
+        paintErrand();
+      }
+    } else {
+      const cfg = ERRAND[state.campus] || ERRAND["大学城校区"];
+      const time = cfg.place.includes("，") ? cfg.place.split("，").slice(1).join("，") : "18:40 前";
+      setText("post-place", value + "，" + time);
+      if (state.lastErrand) {
+        state.lastErrand.place = value + "，" + time;
+        state.lastErrand.route = (state.lastErrand.pickup || cfg.pickup) + " 到 " + value;
+        paintErrand();
+      }
+    }
+    closeSheet("sheet-address");
+    toast("地点已更新");
+    Logger.click("address:" + state.addressKind + ":" + value);
+  }
+
+  function takePhoto(source) {
+    closeSheet("sheet-photo");
+    uploadProof();
+    toast(source + "完成，凭证已上传");
+  }
+
+  function confirmDelivery() {
+    openSheet("sheet-deliver");
+  }
+
+  function doDeliver() {
+    closeSheet("sheet-deliver");
+    finishHelp();
+  }
+
+  function doCancel() {
+    closeSheet("sheet-cancel");
+    clearErrandTimers();
+    if (state.lastErrand) state.lastErrand.status = "已取消";
+    const mine = document.getElementById("mine-order");
+    const empty = document.getElementById("mine-empty");
+    if (mine) mine.hidden = true;
+    if (empty) empty.hidden = false;
+    const card = document.querySelector("#accepted-list .item.accepted");
+    if (card) resetOrderCard(card);
+    openSheet("sheet-cancel-success");
   }
 
   function scale() {
@@ -559,7 +645,7 @@ const App = (() => {
     if (window.API) API.getMe().then(syncMe);
   });
 
-  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, uploadProof, finishHelp, applyCampus, setCampus, helpTab };
+  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, uploadProof, takePhoto, confirmDelivery, doDeliver, doCancel, openAddress, chooseAddress, confirmAddress, finishHelp, applyCampus, setCampus, helpTab };
 })();
 
 window.App = App;
