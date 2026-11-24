@@ -119,6 +119,7 @@ const App = (() => {
       " 日";
     state.records.unshift({ t, text: reason, delta: gain });
     state.lastGain = { n: gain, reason };
+    setText("last-gain", reason + " +" + gain);
     paintCredit();
     Logger.note("credit +" + gain + " " + reason);
     return gain;
@@ -190,7 +191,7 @@ const App = (() => {
     state.lastGain = null;
     if (state.lastErrand && state.lastErrand.status === "已完成") {
       state.lastErrand.status = "进行中";
-      setText("mine-status", "进行中");
+      setText("mine-status", "待接单");
     }
     paintCredit();
     document.querySelectorAll(".sheet").forEach((el) => el.classList.remove("show"));
@@ -299,6 +300,7 @@ const App = (() => {
     if (r) r.textContent = route;
     if (m) m.textContent = meta;
     setText("accept-tip", (el.dataset.tip || "3 元") + " · 平台代收");
+    setText("accept-credit", el.dataset.credit || "82");
     const owner = el.dataset.owner || "同校同学";
     setText("task-owner", owner);
     setText("task-owner-meta", "信用 " + (el.dataset.credit || "82") + " · 刚发布");
@@ -341,6 +343,27 @@ const App = (() => {
     applyCampus(state.campus, true);
   }
 
+  function viewDetail() {
+    const route = (document.getElementById("accept-route") || {}).textContent || "";
+    const meta = (document.getElementById("accept-meta") || {}).textContent || "";
+    const tip = (document.getElementById("accept-tip") || {}).textContent || "3 元 · 平台代收";
+    const credit = (document.getElementById("accept-credit") || {}).textContent || "82";
+    const parts = route.includes(" 到 ") ? route.split(" 到 ") : [route, ""];
+    setText("detail-pickup", parts[0]);
+    setText("detail-place", parts[1] || "C12 栋楼下");
+    setText("detail-deadline", "18:40 前");
+    setText("detail-tip", tip);
+    setText("detail-credit", credit);
+    setText("detail-portions", meta.split(" · ")[0] || "1 份");
+    setText("detail-spill", meta.split(" · ")[1] || "有汤");
+    closeSheet("sheet-accept");
+    go("s-errand-detail");
+  }
+
+  function acceptDetail() {
+    confirmAccept();
+  }
+
   function confirmAccept() {
     const r = document.getElementById("accept-route");
     const m = document.getElementById("accept-meta");
@@ -371,7 +394,7 @@ const App = (() => {
     const box = document.getElementById("proof-box");
     const pb = document.getElementById("proof-btn");
     const done = document.getElementById("task-done");
-    if (box) box.textContent = "已上传 · 取餐照片";
+    if (box) box.textContent = "已上传 · 取餐凭证照片";
     if (pb) pb.disabled = true;
     if (done) done.disabled = false;
     paintTaskSteps(1);
@@ -486,7 +509,7 @@ const App = (() => {
     paintProgressSteps(status);
     const card = document.getElementById("progress-helper-card");
     if (card) card.hidden = idx < 1;
-    setText("progress-proof", idx >= 2 ? "取餐照片已上传" : "接单者取餐后拍照上传");
+    setText("progress-proof", idx >= 2 ? "已上传 · 取餐凭证照片" : "未上传 · 接单者取餐后拍照上传");
     const confirm = document.getElementById("progress-confirm");
     if (confirm) confirm.disabled = idx < 3;
   }
@@ -536,41 +559,73 @@ const App = (() => {
   }
 
 
-  const ADDRESS_OPTIONS = {
-    pickup: ["西一门快递架", "西一门美团柜", "西二门外卖架", "东一门外卖架", "详细地址"],
-    deliver: ["C1", "C2", "C7", "C9", "C10", "C11", "C12", "A1", "A5", "详细地址"]
+  const ADDRESS_LEVEL1 = {
+    pickup: ["校门", "柜区", "详细地址"],
+    deliver: ["楼栋", "详细地址"]
   };
+  const ADDRESS_LEVEL2 = {
+    "校门": ["东一门", "西一门", "校门口"],
+    "柜区": ["西一门快递架", "西一门美团柜", "西二门外卖架", "东一门外卖架"],
+    "楼栋": ["C1", "C2", "C7", "C9", "C10", "C11", "C12", "A1", "A5"]
+  };
+
+  function renderAddressOptions(list) {
+    const box = document.getElementById("address-options");
+    if (!box) return;
+    box.innerHTML = list.map((v) =>
+      '<button class="r" data-address="' + v + '" onclick="App.chooseAddress(this)"><span>' + v + '</span><b></b></button>'
+    ).join("");
+  }
 
   function openAddress(kind) {
     state.addressKind = kind;
+    state.addressGroup = "";
     state.pendingAddress = "";
     setText("address-title", kind === "pickup" ? "选择取餐点" : "选择送达楼栋");
-    const box = document.getElementById("address-options");
     const custom = document.getElementById("address-custom");
+    const note = document.getElementById("address-note");
     if (custom) { custom.style.display = "none"; custom.value = ""; }
-    if (box) {
-      box.innerHTML = (ADDRESS_OPTIONS[kind] || []).map((v) =>
-        '<button class="r" data-address="' + v + '" onclick="App.chooseAddress(this)"><span>' + v + '</span><b></b></button>'
-      ).join("");
-    }
+    if (note) note.value = "";
+    renderAddressOptions(ADDRESS_LEVEL1[kind] || []);
     openSheet("sheet-address");
   }
 
   function chooseAddress(el) {
-    state.pendingAddress = el.dataset.address || "";
+    const value = el.dataset.address || "";
     document.querySelectorAll("#address-options .r").forEach((b) => b.classList.remove("on"));
     el.classList.add("on");
     const custom = document.getElementById("address-custom");
-    if (custom) custom.style.display = state.pendingAddress === "详细地址" ? "block" : "none";
+    if (value === "详细地址") {
+      state.pendingAddress = value;
+      if (custom) custom.style.display = "block";
+      return;
+    }
+    if (custom) custom.style.display = "none";
+    if (ADDRESS_LEVEL2[value]) {
+      state.addressGroup = value;
+      state.pendingAddress = "";
+      renderAddressOptions(["返回上一级"].concat(ADDRESS_LEVEL2[value]));
+      setText("address-title", state.addressGroup);
+      return;
+    }
+    state.pendingAddress = value;
   }
 
   function confirmAddress() {
     const custom = document.getElementById("address-custom");
+    const note = document.getElementById("address-note");
     let value = state.pendingAddress || "";
+    if (value === "返回上一级") {
+      openAddress(state.addressKind);
+      return;
+    }
     if (value === "详细地址" && custom) {
       value = custom.value.trim() || "详细地址";
+    } else if (state.addressGroup && value) {
+      value = state.addressGroup + " · " + value;
     }
     if (!value) { toast("先选一个地点"); return; }
+    if (note && note.value.trim()) value = value + "（" + note.value.trim() + "）";
     if (state.addressKind === "pickup") {
       setText("post-pickup", value);
       if (state.lastErrand) {
@@ -592,12 +647,6 @@ const App = (() => {
     Logger.click("address:" + state.addressKind + ":" + value);
   }
 
-  function takePhoto(source) {
-    closeSheet("sheet-photo");
-    uploadProof();
-    toast(source + "完成，凭证已上传");
-  }
-
   function confirmDelivery() {
     openSheet("sheet-deliver");
   }
@@ -605,19 +654,6 @@ const App = (() => {
   function doDeliver() {
     closeSheet("sheet-deliver");
     finishHelp();
-  }
-
-  function doCancel() {
-    closeSheet("sheet-cancel");
-    clearErrandTimers();
-    if (state.lastErrand) state.lastErrand.status = "已取消";
-    const mine = document.getElementById("mine-order");
-    const empty = document.getElementById("mine-empty");
-    if (mine) mine.hidden = true;
-    if (empty) empty.hidden = false;
-    const card = document.querySelector("#accepted-list .item.accepted");
-    if (card) resetOrderCard(card);
-    openSheet("sheet-cancel-success");
   }
 
   function scale() {
@@ -645,7 +681,7 @@ const App = (() => {
     if (window.API) API.getMe().then(syncMe);
   });
 
-  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, uploadProof, takePhoto, confirmDelivery, doDeliver, doCancel, openAddress, chooseAddress, confirmAddress, finishHelp, applyCampus, setCampus, helpTab };
+  return { state, addCredit, toast, openSheet, closeSheet, choose, pickStar, onScreen, finishReview, finishBorrow, finishErrand, paintCredit, toggle, switchDelivery, undoLast, validatePost, publishItem, applyBorrow, publishErrand, acceptOrder, confirmAccept, viewDetail, acceptDetail, uploadProof, confirmDelivery, doDeliver, openAddress, chooseAddress, confirmAddress, finishHelp, applyCampus, setCampus, helpTab };
 })();
 
 window.App = App;

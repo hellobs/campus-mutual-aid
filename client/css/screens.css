@@ -479,11 +479,11 @@ textarea.input {
 }
 
 .step.step-done {
-  color: var(--green);
+  color: #98A2B3;
 }
 
 .step.step-done::before {
-  background: var(--green);
+  background: #B7C0CC;
 }
 
 .step.now {
