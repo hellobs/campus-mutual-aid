@@ -546,7 +546,7 @@ const App = (() => {
     }, 5500));
     setText("mine-route", cfg.route);
     setText("mine-meta", portions + " · " + spill + " · " + tipText);
-    setText("mine-status", "进行中");
+    setText("mine-status", "待接单");
     const mine = document.getElementById("mine-order");
     const empty = document.getElementById("mine-empty");
     if (mine) mine.hidden = false;
@@ -673,6 +673,9 @@ const App = (() => {
       sheet.addEventListener("click", (e) => {
         if (e.target === sheet) sheet.classList.remove("show");
       });
+    });
+    window.addEventListener("cloud-error", (e) => {
+      toast("云端保存失败：" + (e.detail || "请稍后重试"));
     });
     paintCredit();
     applyCampus(state.campus, true);
