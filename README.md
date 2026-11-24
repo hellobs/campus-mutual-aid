@@ -122,7 +122,7 @@ server/              本地预览用的静态服务，无依赖
 
 ## 部署
 
-线上版本发布在 WorkBuddy，复用同一个应用身份，因此云数据库和分享链接匹配，刷新后数据仍然保留。仓库里的 `.github/workflows/pages.yml` 是早期静态演示的遗留配置，本次作业不使用 GitHub Pages。
+线上版本发布在 WorkBuddy，复用同一个应用身份，因此云数据库和分享链接匹配，刷新后数据仍然保留。GitHub Pages 工作流已移除，本次作业只使用 WorkBuddy 分享链接。
 
 
 ## 视觉规范（方向 B，浅色 AI 产品）
